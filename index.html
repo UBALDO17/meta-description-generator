@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Meta Keywords Editor — Bony Levy</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff; --bg2: #f7f7f5; --bg3: #eeede9;
+  --text: #1a1a18; --text2: #6b6b66; --text3: #9b9b95;
+  --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+  --green: #2d7a3a; --green-bg: #eaf4ec;
+  --amber: #8a5c00; --amber-bg: #fef3d8;
+  --red: #b03030; --red-bg: #fdeaea;
+  --blue: #1a5fa8; --blue-bg: #e8f2fc;
+  --radius: 8px; --radius-lg: 12px;
+  --font: -apple-system, 'Segoe UI', sans-serif;
+}
+body { font-family: var(--font); background: var(--bg2); color: var(--text); font-size: 14px; min-height: 100vh; }
+header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+header h1 { font-size: 15px; font-weight: 600; }
+.header-sub { font-size: 12px; color: var(--text2); }
+.container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.upload-card { background: var(--bg); border: 1.5px dashed var(--border2); border-radius: var(--radius-lg); padding: 3.5rem; text-align: center; cursor: pointer; transition: background 0.15s; }
+.upload-card:hover { background: var(--bg3); }
+.upload-card .icon { font-size: 36px; display: block; margin-bottom: 12px; }
+.upload-card h2 { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+.upload-card p { font-size: 13px; color: var(--text2); }
+#fileInput { display: none; }
+
+/* API key setup */
+.setup-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
+.setup-card h2 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.setup-card p { font-size: 13px; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
+.api-row { display: flex; gap: 10px; align-items: center; }
+.api-row input { flex: 1; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; letter-spacing: 0.05em; }
+.api-row input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
+.api-saved { font-size: 12px; color: var(--green); margin-top: 6px; display: none; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 1.5rem; }
+.stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: 600; }
+.v-green { color: var(--green); } .v-red { color: var(--red); } .v-blue { color: var(--blue); }
+.panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.5rem; overflow: hidden; }
+.panel-hdr { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.panel-hdr h3 { font-size: 13px; font-weight: 600; }
+.panel-body { padding: 16px; }
+.brand-note { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; color: var(--text2); margin-bottom: 14px; line-height: 1.6; }
+.brand-note strong { color: var(--text); }
+.ai-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end; }
+.field-grp { display: flex; flex-direction: column; gap: 4px; }
+.field-grp label { font-size: 12px; color: var(--text2); font-weight: 500; }
+.field-grp select, .field-grp input { font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
+.field-grp select:focus, .field-grp input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
+.btn { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--bg); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 0.1s; }
+.btn:hover { background: var(--bg2); }
+.btn-dark { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.btn-dark:hover { background: #333; }
+.btn-dark:disabled { background: var(--bg3); color: var(--text3); border-color: var(--border); cursor: not-allowed; }
+.btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-green:hover { background: #236130; }
+.btn-blue { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-blue:hover { background: #154d8a; }
+.prog-wrap { margin-top: 14px; }
+.status-msg { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 8px; }
+.status-blue { background: var(--blue-bg); color: var(--blue); }
+.status-green { background: var(--green-bg); color: var(--green); }
+.status-amber { background: var(--amber-bg); color: var(--amber); }
+.status-red { background: var(--red-bg); color: var(--red); }
+.prog-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.3s; }
+.prog-label { font-size: 12px; color: var(--text2); margin-top: 5px; }
+.toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.toolbar input[type=text] { flex: 1; min-width: 180px; font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
+.toolbar input[type=text]:focus { border-color: var(--blue); }
+.toolbar select { font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: auto; max-height: 520px; }
+table { width: 100%; border-collapse: collapse; min-width: 680px; }
+thead th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text2); padding: 9px 12px; background: var(--bg2); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 2; }
+th:nth-child(1){width:44px;} th:nth-child(2){width:30%;} th:nth-child(3){width:56%;} th:nth-child(4){width:70px;}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafaf8; }
+tbody td { padding: 8px 12px; vertical-align: top; }
+.prod-name { font-size: 13px; font-weight: 500; line-height: 1.4; }
+.prod-price { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.kw-input { width: 100%; font-family: var(--font); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; resize: vertical; min-height: 50px; background: var(--bg); color: var(--text); line-height: 1.5; outline: none; }
+.kw-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
+.kw-meta { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.tag { font-size: 11px; background: var(--bg3); color: var(--text2); padding: 2px 7px; border-radius: 99px; }
+.badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; }
+.badge-ok { background: var(--green-bg); color: var(--green); }
+.badge-empty { background: var(--red-bg); color: var(--red); }
+.badge-ai { background: var(--blue-bg); color: var(--blue); }
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(26,95,168,0.25); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.action-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+.note { font-size: 12px; color: var(--text2); }
+.hidden { display: none !important; }
+.gemini-badge { font-size: 11px; background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; border-radius: 99px; padding: 2px 8px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div style="font-size:15px;font-weight:600;">Bulk Meta Keywords Editor</div>
+    <div class="header-sub">bonylevy.com — BigCommerce &nbsp;·&nbsp; <span class="gemini-badge">✦ Gemini 2.0 Flash</span></div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn" id="btnReset" onclick="resetApp()" style="display:none;">↩ New CSV</button>
+    <button class="btn btn-green" id="btnDownload" onclick="downloadCSV()" style="display:none;">⬇ Download CSV</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- API Key setup (always visible at top) -->
+  <div class="setup-card" id="setupCard">
+    <h2>🔑 Gemini API Key</h2>
+    <p>Get a <strong>free</strong> API key at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com</a> — no billing required. The key is stored only in your browser (sessionStorage) and never sent anywhere except Google's API.</p>
+    <div class="api-row">
+      <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off" oninput="onApiKeyInput()" />
+      <button class="btn btn-blue" onclick="saveApiKey()">Save key</button>
+    </div>
+    <div class="api-saved" id="apiSaved">✓ Key saved for this session</div>
+  </div>
+
+  <div id="uploadSection">
+    <div class="upload-card" onclick="document.getElementById('fileInput').click()">
+      <span class="icon">📂</span>
+      <h2>Upload your BigCommerce product CSV</h2>
+      <p>Products → Export → Download, then upload here</p>
+    </div>
+    <input type="file" id="fileInput" accept=".csv">
+  </div>
+
+  <div id="editorSection" class="hidden">
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="panel">
+      <div class="panel-hdr">
+        <span>✦</span>
+        <h3>AI keyword generator — brand-aware &nbsp;<span class="gemini-badge">Gemini 2.0 Flash (free tier)</span></h3>
+      </div>
+      <div class="panel-body">
+        <div class="brand-note">
+          <strong>Brand context loaded:</strong> Bony Levy® — award-winning fine jewelry designer based in Los Angeles. Handcrafted in <strong>14K &amp; 18K yellow gold, white gold, and rose gold</strong>. Collections include Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Categories: earrings (hoop, huggie, stud, drop, diamond, gemstone), necklaces (chain, pendant, diamond, tennis, Y-necklace), rings (stackable, band, crossover, statement, diamond, engagement), bracelets (bangle, chain, tennis, diamond). Keywords will match your existing <code>keyword1; keyword2; keyword3</code> semicolon format.
+        </div>
+        <div class="ai-row">
+          <div class="field-grp">
+            <label>Scope</label>
+            <select id="applyScope">
+              <option value="empty">Empty keywords only</option>
+              <option value="all">All products (overwrite existing)</option>
+            </select>
+          </div>
+          <div class="field-grp">
+            <label>Keywords per product</label>
+            <select id="kwCount">
+              <option value="7">7 keywords</option>
+              <option value="8" selected>8 keywords</option>
+              <option value="10">10 keywords</option>
+            </select>
+          </div>
+          <button class="btn btn-dark" id="btnGenerate" onclick="startGeneration()">✦ Generate with AI</button>
+        </div>
+        <div id="progSection" class="hidden prog-wrap">
+          <div class="status-msg status-blue" id="statusMsg">
+            <div class="spinner" id="spinner"></div>
+            <span id="statusText">Starting...</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+          <div class="prog-label" id="progLabel">0 / 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search by product name..." oninput="renderTable()" />
+      <select id="filterSel" onchange="renderTable()">
+        <option value="all">All products</option>
+        <option value="empty">Missing keywords</option>
+        <option value="filled">Has keywords</option>
+        <option value="ai">AI generated</option>
+      </select>
+      <span id="resultCount" style="font-size:12px;color:var(--text2);white-space:nowrap;"></span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Meta keywords <span style="text-transform:none;letter-spacing:0;font-weight:400;">(semicolon-separated)</span></th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-green" onclick="downloadCSV()">⬇ Download updated CSV</button>
+      <span class="note" id="downloadNote"></span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let allRows = [], headers = [], originalLines = [];
+let COL_KW, COL_NAME, COL_ID, COL_PRICE, COL_META_DESC;
+let generating = false, stopGen = false;
+
+// ── API Key management ──────────────────────────────────────────────────────
+function getApiKey() { return sessionStorage.getItem('gemini_api_key') || ''; }
+
+function onApiKeyInput() {
+  document.getElementById('apiSaved').style.display = 'none';
+}
+
+function saveApiKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) { alert('Please paste your Gemini API key first.'); return; }
+  sessionStorage.setItem('gemini_api_key', k);
+  document.getElementById('apiSaved').style.display = 'block';
+}
+
+// Pre-fill if already saved
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = getApiKey();
+  if (saved) {
+    document.getElementById('apiKeyInput').value = saved;
+    document.getElementById('apiSaved').style.display = 'block';
+  }
+});
+
+// ── CSV parsing ─────────────────────────────────────────────────────────────
+function parseCSVLine(line) {
+  const res = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { if (inQ && line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+    else if (c===',' && !inQ){res.push(cur);cur='';}
+    else cur+=c;
+  }
+  res.push(cur); return res;
+}
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => processCSV(ev.target.result);
+  r.readAsText(f);
+});
+
+function processCSV(text) {
+  originalLines = text.split(/\r?\n/);
+  headers = parseCSVLine(originalLines[0]);
+  COL_KW = headers.indexOf('Meta Keywords');
+  COL_NAME = headers.indexOf('Name');
+  COL_ID = headers.indexOf('ID');
+  COL_PRICE = headers.indexOf('Price');
+  COL_META_DESC = headers.indexOf('Meta Description');
+
+  allRows = [];
+  for (let i = 1; i < originalLines.length; i++) {
+    if (!originalLines[i].trim()) continue;
+    const cols = parseCSVLine(originalLines[i]);
+    if (cols[0] === 'Product') {
+      allRows.push({ lineIndex:i, id:cols[COL_ID]||'', name:cols[COL_NAME]||'', price:cols[COL_PRICE]||'', metaDesc:cols[COL_META_DESC]||'', keywords:cols[COL_KW]||'', aiGenerated:false, cols });
+    }
+  }
+
+  const emptyCount = allRows.filter(r=>!r.keywords.trim()).length;
+  document.getElementById('applyScope').options[0].text = `Empty keywords only (${emptyCount.toLocaleString()})`;
+  document.getElementById('applyScope').options[1].text = `All ${allRows.length.toLocaleString()} products (overwrite)`;
+
+  document.getElementById('uploadSection').classList.add('hidden');
+  document.getElementById('editorSection').classList.remove('hidden');
+  document.getElementById('btnReset').style.display='';
+  document.getElementById('btnDownload').style.display='';
+  updateStats(); renderTable();
+}
+
+function updateStats() {
+  const total=allRows.length, filled=allRows.filter(r=>r.keywords.trim()).length, empty=total-filled, ai=allRows.filter(r=>r.aiGenerated).length;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Total products</div><div class="stat-value">${total.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">Has keywords</div><div class="stat-value v-green">${filled.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">Missing</div><div class="stat-value v-red">${empty.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-blue">${ai.toLocaleString()}</div></div>`;
+}
+
+function getFiltered() {
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const f=document.getElementById('filterSel').value;
+  return allRows.filter(r=>{
+    const ms=!q||r.name.toLowerCase().includes(q);
+    const mf=f==='all'||(f==='empty'&&!r.keywords.trim())||(f==='filled'&&r.keywords.trim())||(f==='ai'&&r.aiGenerated);
+    return ms&&mf;
+  });
+}
+
+function renderTable() {
+  const rows=getFiltered();
+  document.getElementById('resultCount').textContent=rows.length.toLocaleString()+' products';
+  const tbody=document.getElementById('tableBody');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--text2);">No products match.</td></tr>';return;}
+  tbody.innerHTML=rows.slice(0,300).map(r=>{
+    const idx=allRows.indexOf(r);
+    const kws=r.keywords.trim()?r.keywords.split(';').map(k=>k.trim()).filter(Boolean):[];
+    const badge=r.keywords.trim()?(r.aiGenerated?'<span class="badge badge-ai">✦ AI</span>':'<span class="badge badge-ok">✓ set</span>'):'<span class="badge badge-empty">empty</span>';
+    const tags=kws.length?`<div class="tag-row">${kws.slice(0,6).map(k=>`<span class="tag">${esc(k)}</span>`).join('')}${kws.length>6?`<span class="tag">+${kws.length-6}</span>`:''}</div>`:'';
+    return `<tr>
+      <td style="color:var(--text3);font-size:12px;padding-top:10px;">${idx+1}</td>
+      <td><div class="prod-name">${esc(r.name)}</div><div class="prod-price">$${parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
+      <td>
+        <textarea class="kw-input" data-idx="${idx}" oninput="updateKw(${idx},this.value)">${esc(r.keywords)}</textarea>
+        ${tags}
+        <div class="kw-meta">${kws.length?kws.length+' keywords':''}</div>
+      </td>
+      <td style="text-align:center;padding-top:12px;">${badge}</td>
+    </tr>`;
+  }).join('');
+  if(rows.length>300) tbody.innerHTML+=`<tr><td colspan="4" style="text-align:center;padding:10px;font-size:12px;color:var(--text2);">Showing 300 of ${rows.length} — filter to see more.</td></tr>`;
+}
+
+function updateKw(idx,val){allRows[idx].keywords=val;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Generation ──────────────────────────────────────────────────────────────
+async function startGeneration(){
+  if(generating){stopGen=true;return;}
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    alert('Please enter and save your Gemini API key first (at the top of the page).');
+    document.getElementById('apiKeyInput').focus();
+    return;
+  }
+
+  const scope=document.getElementById('applyScope').value;
+  const kwN=document.getElementById('kwCount').value;
+  const targets=scope==='all'?[...allRows]:allRows.filter(r=>!r.keywords.trim());
+  if(!targets.length){alert('No products need keywords!');return;}
+
+  generating=true; stopGen=false;
+  document.getElementById('btnGenerate').textContent='⏹ Stop';
+  document.getElementById('progSection').classList.remove('hidden');
+  document.getElementById('statusMsg').className='status-msg status-blue';
+  document.getElementById('spinner').style.display='';
+
+  // Gemini free tier: 15 RPM, so smaller batches + delay
+  let done=0; const total=targets.length; const BATCH=10;
+
+  for(let i=0;i<targets.length;i+=BATCH){
+    if(stopGen) break;
+    const batch=targets.slice(i,i+BATCH);
+    document.getElementById('statusText').textContent=`Generating keywords for products ${i+1}–${Math.min(i+BATCH,total)} of ${total}...`;
+    document.getElementById('progLabel').textContent=`${done} / ${total}`;
+    document.getElementById('progFill').style.width=(done/total*100)+'%';
+
+    try {
+      const results=await genBatch(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
+      results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+      done+=batch.length;
+    } catch(e){
+      console.error(e);
+      const msg=document.getElementById('statusMsg');
+      msg.className='status-msg status-amber';
+      document.getElementById('statusText').textContent=`Error: ${e.message} — waiting 10s before retry...`;
+      await sleep(10000);
+      // retry same batch once
+      try {
+        const results=await genBatch(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
+        results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+        done+=batch.length;
+        document.getElementById('statusMsg').className='status-msg status-blue';
+      } catch(e2) {
+        console.error('Retry failed', e2);
+        document.getElementById('statusText').textContent=`Skipping batch after retry failure. Continuing...`;
+        done+=batch.length;
+      }
+    }
+
+    updateStats();
+    if(i%(BATCH*2)===0) renderTable();
+
+    // Rate-limit pause between batches (free tier: 15 req/min)
+    if(i+BATCH < targets.length && !stopGen) await sleep(4500);
+  }
+
+  document.getElementById('progFill').style.width='100%';
+  document.getElementById('progLabel').textContent=`${done} / ${total}`;
+  const msg=document.getElementById('statusMsg');
+  msg.className='status-msg status-green';
+  document.getElementById('spinner').style.display='none';
+  document.getElementById('statusText').textContent=stopGen?`Stopped — ${done} products updated.`:`Done! ${done} products now have keywords.`;
+  generating=false; stopGen=false;
+  document.getElementById('btnGenerate').innerHTML='✦ Generate with AI';
+  updateStats(); renderTable();
+}
+
+async function genBatch(products, kwN, apiKey){
+  const productList = products.map((p,i)=>`${i+1}. Product name: "${p.name}"${p.meta?`\n   Meta description: "${p.meta.slice(0,120)}"`:''}`).join('\n');
+
+  const prompt=`You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand based in Los Angeles. Bony Levy designs handcrafted jewelry in 14K and 18K yellow gold, white gold, and rose gold. Collections include Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Product categories: earrings (hoop, huggie, stud, drop, diamond, gemstone), necklaces (chain, pendant, diamond, tennis, Y-necklace), rings (stackable, band, crossover, statement, diamond, engagement), bracelets (bangle, chain, tennis, diamond).
+
+For each product below, generate exactly ${kwN} precise, relevant SEO meta keywords.
+
+Rules:
+- Always include the exact metal (e.g. "14K yellow gold" or "18K white gold")
+- Always include the jewelry type/category (e.g. "hoop earrings", "pendant necklace", "stackable ring")
+- Include the specific style/design from the name (e.g. "huggie", "pave diamond", "tennis bracelet", "bar pendant")
+- Include the collection name if present (Audrey, Mika, Bardot, Maya, Varda, Kiera, El Mar, Gatsby, etc.)
+- Always include "Bony Levy" and "fine jewelry"
+- Add relevant search terms a buyer would use
+- Use semicolons to separate (no commas, no newlines, no bullet points)
+- Each keyword: 1–4 words, lowercase except brand names and metal types
+- Return ONLY a valid JSON array of strings, one string per product, no markdown, no explanation
+
+Products:
+${productList}
+
+Return format (${products.length} items): ["kw1; kw2; kw3; ...", "kw1; kw2; ...", ...]`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 2048 }
+    })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(()=>({}));
+    throw new Error(err?.error?.message || `HTTP ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const clean = raw.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── CSV export ──────────────────────────────────────────────────────────────
+function escCSV(v){
+  const s=String(v==null?'':v);
+  return (s.includes(',')||s.includes('"')||s.includes('\n')||s.includes('\r'))?'"'+s.replace(/"/g,'""')+'"':s;
+}
+
+function downloadCSV(){
+  const map={};
+  allRows.forEach(r=>{map[r.lineIndex]=r.keywords;});
+  const out=originalLines.map((line,i)=>{
+    if(i===0||!line.trim()) return line;
+    const cols=parseCSVLine(line);
+    if(cols[0]==='Product'&&map.hasOwnProperty(i)){
+      while(cols.length<=COL_KW) cols.push('');
+      cols[COL_KW]=map[i];
+      return cols.map(escCSV).join(',');
+    }
+    return line;
+  });
+  const blob=new Blob([out.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='products_keywords_bonylevy.csv'; a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('downloadNote').textContent='✓ Downloaded — import back via Products → Import in BigCommerce';
+}
+
+function resetApp(){
+  allRows=[];headers=[];originalLines=[];
+  document.getElementById('uploadSection').classList.remove('hidden');
+  document.getElementById('editorSection').classList.add('hidden');
+  document.getElementById('btnReset').style.display='none';
+  document.getElementById('btnDownload').style.display='none';
+  document.getElementById('fileInput').value='';
+}
+</script>
+</body>
+</html>
