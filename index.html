@@ -28,7 +28,6 @@ header {
 .upload-card {
   background: var(--bg); border: 1.5px dashed var(--gold-border); border-radius: var(--radius-lg);
   padding: 4rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-  tabindex: 0;
 }
 .upload-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(184,147,63,0.06) 0%, transparent 70%); pointer-events: none; }
 .upload-card:hover, .upload-card:focus { background: var(--gold-pale); border-color: var(--gold); outline: none; }
@@ -60,7 +59,6 @@ header {
 .rule-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 5px; }
 .brand-note { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; color: var(--text2); margin-bottom: 14px; line-height: 1.7; }
 .brand-note strong { color: var(--text); }
-/* Mode tabs */
 .mode-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
 .mode-tab { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 7px 16px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
 .mode-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
@@ -95,7 +93,6 @@ header {
 .toolbar input[type=text] { flex: 1; min-width: 180px; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
 .toolbar input[type=text]:focus { border-color: var(--gold); }
 .toolbar select { font-family: var(--font); font-size: 13px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
-/* Pagination */
 .pagination { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
 .pagination button { font-family: var(--font); font-size: 12px; padding: 5px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); cursor: pointer; }
 .pagination button:disabled { color: var(--text3); cursor: not-allowed; }
@@ -104,11 +101,8 @@ header {
 .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: auto; max-height: 560px; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 thead th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); padding: 10px 14px; background: var(--bg2); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* KW mode columns */
 .cols-kw th:nth-child(1){width:44px;} .cols-kw th:nth-child(2){width:22%;} .cols-kw th:nth-child(3){width:48%;} .cols-kw th:nth-child(4){width:90px;}
-/* Desc mode columns */
 .cols-desc th:nth-child(1){width:44px;} .cols-desc th:nth-child(2){width:22%;} .cols-desc th:nth-child(3){width:48%;} .cols-desc th:nth-child(4){width:90px;}
-/* Both mode columns */
 .cols-both th:nth-child(1){width:44px;} .cols-both th:nth-child(2){width:18%;} .cols-both th:nth-child(3){width:36%;} .cols-both th:nth-child(4){width:36%;} .cols-both th:nth-child(5){width:70px;}
 tbody tr { border-bottom: 1px solid var(--border); }
 tbody tr:last-child { border-bottom: none; }
@@ -121,9 +115,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 .desc-input { width: 100%; font-family: var(--font); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; resize: vertical; min-height: 64px; background: var(--bg); color: var(--text); line-height: 1.6; outline: none; }
 .desc-input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(184,147,63,0.12); }
 .char-count { font-size: 10px; margin-top: 2px; }
-.char-ok { color: var(--green); }
-.char-warn { color: var(--amber); }
-.char-over { color: var(--red); }
+.char-ok { color: var(--green); } .char-warn { color: var(--amber); } .char-over { color: var(--red); }
 .kw-meta { font-size: 11px; color: var(--text3); margin-top: 3px; }
 .tag-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
 .tag { font-size: 11px; background: var(--bg3); color: var(--text2); padding: 2px 8px; border-radius: 99px; }
@@ -179,6 +171,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 .sample-kw-raw { font-size: 11px; color: var(--text3); background: var(--bg2); padding: 8px 10px; border-radius: 6px; font-family: monospace; line-height: 1.5; word-break: break-word; }
 .sample-rule-note { font-size: 11px; color: var(--green); background: var(--green-bg); padding: 6px 10px; border-radius: 6px; margin-top: 8px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.5; }
 .err-banner { background: var(--red-bg); border: 1px solid rgba(160,40,40,0.2); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 10px; display: none; }
+.col-debug { background: var(--green-bg); border: 1px solid rgba(45,106,58,0.25); border-radius: var(--radius); padding: 8px 12px; font-size: 11px; color: var(--green); margin-bottom: 10px; font-family: monospace; display: none; }
 </style>
 </head>
 <body>
@@ -220,6 +213,8 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
   <div id="editorSection" class="hidden">
 
     <div class="err-banner" id="errBanner"></div>
+    <!-- Column map debug info shown after load -->
+    <div class="col-debug" id="colDebug"></div>
 
     <div class="stats-grid" id="statsGrid"></div>
 
@@ -234,14 +229,12 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
       <div class="panel-hdr"><span>✦</span><h3>AI generator — keywords &amp; meta descriptions</h3></div>
       <div class="panel-body">
 
-        <!-- Mode tabs -->
         <div class="mode-tabs">
           <button class="mode-tab active" onclick="setMode('keywords')" id="tabKw">Meta Keywords</button>
           <button class="mode-tab" onclick="setMode('descriptions')" id="tabDesc">Meta Descriptions</button>
           <button class="mode-tab" onclick="setMode('both')" id="tabBoth">Both at once</button>
         </div>
 
-        <!-- Keywords panel -->
         <div class="mode-panel active" id="panelKw">
           <div class="rules-card">
             <h4>Keyword rules</h4>
@@ -276,7 +269,6 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           </div>
         </div>
 
-        <!-- Descriptions panel -->
         <div class="mode-panel" id="panelDesc">
           <div class="rules-card">
             <h4>Meta description rules</h4>
@@ -311,7 +303,6 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           </div>
         </div>
 
-        <!-- Both panel -->
         <div class="mode-panel" id="panelBoth">
           <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass — saves API calls and time.</div>
           <div class="ai-row">
@@ -355,7 +346,6 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
       </div>
     </div>
 
-    <!-- Table view mode -->
     <div class="toolbar">
       <input type="text" id="searchInput" placeholder="Search by product name..." oninput="debouncedRender()" />
       <select id="filterSel" onchange="renderTable()">
@@ -401,18 +391,21 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 </div>
 
 <script>
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
 let allRows = [], headers = [], originalLines = [];
 let COL_KW, COL_NAME, COL_ID, COL_PRICE, COL_META_DESC;
 let generating = false, stopGen = false;
 let pendingTargets = [];
 let currentMode = 'keywords';
-// Pagination
 const PAGE_SIZE = 50;
 let currentPage = 0;
-// Debounce timer
 let searchDebounce = null;
 
-// ── API Key ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// API KEY
+// ─────────────────────────────────────────────────────────────────────────────
 function getApiKey() { return sessionStorage.getItem('groq_api_key') || ''; }
 function onApiKeyInput() { document.getElementById('apiSaved').style.display = 'none'; }
 function saveApiKey() {
@@ -426,22 +419,24 @@ window.addEventListener('DOMContentLoaded', () => {
   if (saved) { document.getElementById('apiKeyInput').value = saved; document.getElementById('apiSaved').style.display = 'block'; }
 });
 
-// ── Mode switching ────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// MODE SWITCHING
+// ─────────────────────────────────────────────────────────────────────────────
 function setMode(m) {
   currentMode = m;
+  const tabMap = { keywords: 'tabKw', descriptions: 'tabDesc', both: 'tabBoth' };
+  const panelMap = { keywords: 'panelKw', descriptions: 'panelDesc', both: 'panelBoth' };
   ['keywords','descriptions','both'].forEach(id => {
-    document.getElementById('tab' + id.charAt(0).toUpperCase() + id.slice(1).replace('riptions','').replace('th','')).classList.toggle('active', false);
-    document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1).replace('riptions','').replace('th','')).classList.toggle('active', false);
+    document.getElementById(tabMap[id]).classList.toggle('active', id === m);
+    document.getElementById(panelMap[id]).classList.toggle('active', id === m);
   });
-  const tabMap = {keywords:'tabKw', descriptions:'tabDesc', both:'tabBoth'};
-  const panelMap = {keywords:'panelKw', descriptions:'panelDesc', both:'panelBoth'};
-  document.getElementById(tabMap[m]).classList.add('active');
-  document.getElementById(panelMap[m]).classList.add('active');
   document.getElementById('viewModeSel').value = m === 'both' ? 'both' : m;
   renderTable();
 }
 
-// ── Helper: diamond / metal detection ────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
 function hasDiamond(name) { return /diamond|pave|pavé|brilliant|solitaire|cz|cubic zirconia/i.test(name); }
 function getMetalKarat(name) {
   const explicit = name.match(/(\d{2})[Kk]/);
@@ -454,20 +449,25 @@ function getGoldTone(name) {
   return 'yellow gold';
 }
 
-// ── CSV parsing ───────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// CSV PARSING
+// ─────────────────────────────────────────────────────────────────────────────
 function parseCSVLine(line) {
   const res = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
-    if (c === '"') { if (inQ && line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
-    else if (c===',' && !inQ){res.push(cur);cur='';}
-    else cur+=c;
+    if (c === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
+    else cur += c;
   }
-  res.push(cur); return res;
+  res.push(cur);
+  return res;
 }
 
 document.getElementById('fileInput').addEventListener('change', e => {
-  const f = e.target.files[0]; if(!f) return;
+  const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => processCSV(ev.target.result);
   r.readAsText(f);
@@ -476,10 +476,11 @@ document.getElementById('fileInput').addEventListener('change', e => {
 function processCSV(text) {
   originalLines = text.split(/\r?\n/);
   headers = parseCSVLine(originalLines[0]);
-  COL_KW = headers.indexOf('Meta Keywords');
-  COL_NAME = headers.indexOf('Name');
-  COL_ID = headers.indexOf('Product ID') !== -1 ? headers.indexOf('Product ID') : headers.indexOf('ID');
-  COL_PRICE = headers.indexOf('Price');
+
+  COL_KW       = headers.indexOf('Meta Keywords');
+  COL_NAME     = headers.indexOf('Name');
+  COL_ID       = headers.indexOf('Product ID') !== -1 ? headers.indexOf('Product ID') : headers.indexOf('ID');
+  COL_PRICE    = headers.indexOf('Price');
   COL_META_DESC = headers.indexOf('Meta Description');
 
   // Column guard
@@ -488,15 +489,23 @@ function processCSV(text) {
   if (COL_KW === -1) missing.push('Meta Keywords');
   if (COL_META_DESC === -1) missing.push('Meta Description');
   if (missing.length) {
-    showErr(`Could not find required columns: ${missing.join(', ')}. Is this a BigCommerce product export CSV?`);
+    showErr('Could not find required columns: ' + missing.join(', ') + '. Is this a BigCommerce product export CSV?');
     return;
   }
   hideErr();
 
+  // Show column debug info so you can verify
+  const dbg = document.getElementById('colDebug');
+  dbg.textContent = 'Column map — Name: col ' + COL_NAME + ' | Meta Keywords: col ' + COL_KW +
+    ' (letter ' + colLetter(COL_KW) + ') | Meta Description: col ' + COL_META_DESC +
+    ' (letter ' + colLetter(COL_META_DESC) + ') | Price: col ' + COL_PRICE;
+  dbg.style.display = 'block';
+
   allRows = [];
   for (let i = 1; i < originalLines.length; i++) {
-    if (!originalLines[i].trim()) continue;
-    const cols = parseCSVLine(originalLines[i]);
+    const line = originalLines[i];
+    if (!line.trim()) continue;
+    const cols = parseCSVLine(line);
     if (cols[0] === 'Product') {
       allRows.push({
         lineIndex: i,
@@ -507,7 +516,8 @@ function processCSV(text) {
         keywords: cols[COL_KW] || '',
         aiGeneratedKw: false,
         aiGeneratedDesc: false,
-        cols
+        // *** KEY FIX: store the already-parsed cols array so export never re-parses ***
+        cols: cols
       });
     }
   }
@@ -524,52 +534,60 @@ function processCSV(text) {
   renderTable();
 }
 
+// Convert 0-based column index to Excel letter (A, B, … Z, AA …)
+function colLetter(n) {
+  let s = '';
+  n++;
+  while (n > 0) { n--; s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26); }
+  return s;
+}
+
 function updateScopeLabels() {
   const total = allRows.length;
-  const emptyKw = allRows.filter(r => !r.keywords.trim()).length;
+  const emptyKw   = allRows.filter(r => !r.keywords.trim()).length;
   const emptyDesc = allRows.filter(r => !r.metaDesc.trim()).length;
   const emptyBoth = allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim()).length;
-  document.getElementById('applyScopeKw').options[0].text = `Empty keywords only (${emptyKw.toLocaleString()})`;
-  document.getElementById('applyScopeKw').options[1].text = `All ${total.toLocaleString()} products (overwrite)`;
-  document.getElementById('applyScopeDesc').options[0].text = `Empty descriptions only (${emptyDesc.toLocaleString()})`;
-  document.getElementById('applyScopeDesc').options[1].text = `All ${total.toLocaleString()} products (overwrite)`;
-  document.getElementById('applyScopeBoth').options[0].text = `Missing either field (${emptyBoth.toLocaleString()})`;
-  document.getElementById('applyScopeBoth').options[1].text = `All ${total.toLocaleString()} products (overwrite both)`;
+  document.getElementById('applyScopeKw').options[0].text   = 'Empty keywords only (' + emptyKw.toLocaleString() + ')';
+  document.getElementById('applyScopeKw').options[1].text   = 'All ' + total.toLocaleString() + ' products (overwrite)';
+  document.getElementById('applyScopeDesc').options[0].text = 'Empty descriptions only (' + emptyDesc.toLocaleString() + ')';
+  document.getElementById('applyScopeDesc').options[1].text = 'All ' + total.toLocaleString() + ' products (overwrite)';
+  document.getElementById('applyScopeBoth').options[0].text = 'Missing either field (' + emptyBoth.toLocaleString() + ')';
+  document.getElementById('applyScopeBoth').options[1].text = 'All ' + total.toLocaleString() + ' products (overwrite both)';
 }
 
 function updateStats() {
-  const total = allRows.length;
-  const filledKw = allRows.filter(r => r.keywords.trim()).length;
+  const total     = allRows.length;
+  const filledKw  = allRows.filter(r => r.keywords.trim()).length;
   const filledDesc = allRows.filter(r => r.metaDesc.trim()).length;
-  const aiKw = allRows.filter(r => r.aiGeneratedKw).length;
-  const aiDesc = allRows.filter(r => r.aiGeneratedDesc).length;
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Total products</div><div class="stat-value">${total.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Has keywords</div><div class="stat-value v-green">${filledKw.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Has descriptions</div><div class="stat-value v-blue">${filledDesc.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Missing keywords</div><div class="stat-value v-red">${(total - filledKw).toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-gold">${Math.max(aiKw, aiDesc).toLocaleString()}</div></div>`;
+  const aiKw      = allRows.filter(r => r.aiGeneratedKw).length;
+  const aiDesc    = allRows.filter(r => r.aiGeneratedDesc).length;
+  document.getElementById('statsGrid').innerHTML =
+    '<div class="stat-card"><div class="stat-label">Total products</div><div class="stat-value">' + total.toLocaleString() + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Has keywords</div><div class="stat-value v-green">' + filledKw.toLocaleString() + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Has descriptions</div><div class="stat-value v-blue">' + filledDesc.toLocaleString() + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Missing keywords</div><div class="stat-value v-red">' + (total - filledKw).toLocaleString() + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-gold">' + Math.max(aiKw, aiDesc).toLocaleString() + '</div></div>';
 }
 
-// ── Error banner ──────────────────────────────────────────────────────────────
-function showErr(msg) {
-  const b = document.getElementById('errBanner');
-  b.textContent = '⚠ ' + msg;
-  b.style.display = 'block';
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// ERROR BANNER
+// ─────────────────────────────────────────────────────────────────────────────
+function showErr(msg) { const b = document.getElementById('errBanner'); b.textContent = '⚠ ' + msg; b.style.display = 'block'; }
 function hideErr() { document.getElementById('errBanner').style.display = 'none'; }
 
-// ── Filtering + pagination ────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// FILTERING + PAGINATION
+// ─────────────────────────────────────────────────────────────────────────────
 function getFiltered() {
   const q = document.getElementById('searchInput').value.toLowerCase();
   const f = document.getElementById('filterSel').value;
   return allRows.filter(r => {
     const ms = !q || r.name.toLowerCase().includes(q);
     const mf = f === 'all'
-      || (f === 'empty_kw' && !r.keywords.trim())
+      || (f === 'empty_kw'   && !r.keywords.trim())
       || (f === 'empty_desc' && !r.metaDesc.trim())
-      || (f === 'filled' && r.keywords.trim() && r.metaDesc.trim())
-      || (f === 'ai' && (r.aiGeneratedKw || r.aiGeneratedDesc));
+      || (f === 'filled'     && r.keywords.trim() && r.metaDesc.trim())
+      || (f === 'ai'         && (r.aiGeneratedKw || r.aiGeneratedDesc));
     return ms && mf;
   });
 }
@@ -589,7 +607,6 @@ function renderTable() {
 
   document.getElementById('resultCount').textContent = total.toLocaleString() + ' products';
 
-  // Build header
   const tHead = document.getElementById('tableHead');
   const tBody = document.getElementById('tableBody');
   const mainTable = document.getElementById('mainTable');
@@ -597,13 +614,13 @@ function renderTable() {
 
   if (viewMode === 'both') {
     mainTable.classList.add('cols-both');
-    tHead.innerHTML = `<tr><th>#</th><th>Product</th><th>Meta Keywords</th><th>Meta Description</th><th style="text-align:center;">Status</th></tr>`;
+    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords</th><th>Meta Description</th><th style="text-align:center;">Status</th></tr>';
   } else if (viewMode === 'descriptions') {
     mainTable.classList.add('cols-desc');
-    tHead.innerHTML = `<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(150–160 chars ideal)</span></th><th style="text-align:center;">Status</th></tr>`;
+    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(150–160 chars ideal)</span></th><th style="text-align:center;">Status</th></tr>';
   } else {
     mainTable.classList.add('cols-kw');
-    tHead.innerHTML = `<tr><th>#</th><th>Product</th><th>Meta Keywords <span style="text-transform:none;letter-spacing:0;font-weight:400;">(semicolon-separated)</span></th><th style="text-align:center;">Status</th></tr>`;
+    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords <span style="text-transform:none;letter-spacing:0;font-weight:400;">(semicolon-separated)</span></th><th style="text-align:center;">Status</th></tr>';
   }
 
   if (!pageRows.length) {
@@ -614,58 +631,49 @@ function renderTable() {
 
   tBody.innerHTML = pageRows.map(r => {
     const idx = allRows.indexOf(r);
-    const globalNum = allRows.indexOf(r) + 1;
+    const globalNum = idx + 1;
 
     // Keywords cell
     const kws = r.keywords.trim() ? r.keywords.split(';').map(k => k.trim()).filter(Boolean) : [];
-    const tags = kws.length ? `<div class="tag-row">${kws.slice(0,5).map(k => {
+    const tags = kws.length ? '<div class="tag-row">' + kws.slice(0,5).map(k => {
       const cls = /natural diamond|diamond/i.test(k) ? ' tag-diamond' : (/18K|14K|gold/i.test(k) ? ' tag-gold' : '');
-      return `<span class="tag${cls}">${esc(k)}</span>`;
-    }).join('')}${kws.length > 5 ? `<span class="tag">+${kws.length - 5}</span>` : ''}</div>` : '';
-    const kwCell = `<td>
-      <textarea class="kw-input" data-idx="${idx}" oninput="updateKw(${idx},this.value)">${esc(r.keywords)}</textarea>
-      ${tags}
-      <div class="kw-meta" id="kwmeta-${idx}">${kws.length ? kws.length + ' keywords' : ''}</div>
-    </td>`;
+      return '<span class="tag' + cls + '">' + esc(k) + '</span>';
+    }).join('') + (kws.length > 5 ? '<span class="tag">+' + (kws.length - 5) + '</span>' : '') + '</div>' : '';
+    const kwCell = '<td>' +
+      '<textarea class="kw-input" data-idx="' + idx + '" oninput="updateKw(' + idx + ',this.value)">' + esc(r.keywords) + '</textarea>' +
+      tags +
+      '<div class="kw-meta" id="kwmeta-' + idx + '">' + (kws.length ? kws.length + ' keywords' : '') + '</div>' +
+      '</td>';
 
     // Description cell
     const descLen = r.metaDesc.trim().length;
     const descCls = descLen === 0 ? '' : descLen <= 160 ? 'char-ok' : 'char-over';
-    const descHint = descLen === 0 ? '' : `${descLen} chars${descLen > 160 ? ' — over limit' : descLen >= 150 ? ' ✓ ideal' : ' — short'}`;
-    const descCell = `<td>
-      <textarea class="desc-input" data-idx="${idx}" oninput="updateDesc(${idx},this.value,this)">${esc(r.metaDesc)}</textarea>
-      <div class="char-count ${descCls}" id="descmeta-${idx}">${descHint}</div>
-    </td>`;
+    const descHint = descLen === 0 ? '' : descLen + ' chars' + (descLen > 160 ? ' — over limit' : descLen >= 150 ? ' ✓ ideal' : ' — short');
+    const descCell = '<td>' +
+      '<textarea class="desc-input" data-idx="' + idx + '" oninput="updateDesc(' + idx + ',this.value,this)">' + esc(r.metaDesc) + '</textarea>' +
+      '<div class="char-count ' + descCls + '" id="descmeta-' + idx + '">' + descHint + '</div>' +
+      '</td>';
 
     // Status badge
     const kwOk = !!r.keywords.trim(), descOk = !!r.metaDesc.trim();
     let badge;
     if (viewMode === 'both') {
       const kwBadge = kwOk ? (r.aiGeneratedKw ? '<span class="badge badge-ai">✦ KW</span>' : '<span class="badge badge-ok">✓ KW</span>') : '<span class="badge badge-empty">no KW</span>';
-      const dBadge = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ Desc</span>' : '<span class="badge badge-ok">✓ Desc</span>') : '<span class="badge badge-empty">no Desc</span>';
-      badge = `<div style="display:flex;flex-direction:column;gap:4px;align-items:center;">${kwBadge}${dBadge}</div>`;
+      const dBadge  = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ Desc</span>' : '<span class="badge badge-ok">✓ Desc</span>') : '<span class="badge badge-empty">no Desc</span>';
+      badge = '<div style="display:flex;flex-direction:column;gap:4px;align-items:center;">' + kwBadge + dBadge + '</div>';
     } else if (viewMode === 'descriptions') {
       badge = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ AI</span>' : '<span class="badge badge-ok">✓ set</span>') : '<span class="badge badge-empty">empty</span>';
     } else {
       badge = kwOk ? (r.aiGeneratedKw ? '<span class="badge badge-ai">✦ AI</span>' : '<span class="badge badge-ok">✓ set</span>') : '<span class="badge badge-empty">empty</span>';
     }
 
-    if (viewMode === 'both') {
-      return `<tr><td style="color:var(--text3);font-size:12px;padding-top:12px;">${globalNum}</td>
-        <td><div class="prod-name">${esc(r.name)}</div><div class="prod-price">$${parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
-        ${kwCell}${descCell}
-        <td style="text-align:center;padding-top:12px;">${badge}</td></tr>`;
-    } else if (viewMode === 'descriptions') {
-      return `<tr><td style="color:var(--text3);font-size:12px;padding-top:12px;">${globalNum}</td>
-        <td><div class="prod-name">${esc(r.name)}</div><div class="prod-price">$${parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
-        ${descCell}
-        <td style="text-align:center;padding-top:12px;">${badge}</td></tr>`;
-    } else {
-      return `<tr><td style="color:var(--text3);font-size:12px;padding-top:12px;">${globalNum}</td>
-        <td><div class="prod-name">${esc(r.name)}</div><div class="prod-price">$${parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
-        ${kwCell}
-        <td style="text-align:center;padding-top:12px;">${badge}</td></tr>`;
-    }
+    const numCell = '<td style="color:var(--text3);font-size:12px;padding-top:12px;">' + globalNum + '</td>';
+    const nameCell = '<td><div class="prod-name">' + esc(r.name) + '</div><div class="prod-price">$' + parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></td>';
+    const statusCell = '<td style="text-align:center;padding-top:12px;">' + badge + '</td>';
+
+    if (viewMode === 'both')         return '<tr>' + numCell + nameCell + kwCell + descCell + statusCell + '</tr>';
+    if (viewMode === 'descriptions') return '<tr>' + numCell + nameCell + descCell + statusCell + '</tr>';
+    return '<tr>' + numCell + nameCell + kwCell + statusCell + '</tr>';
   }).join('');
 
   renderPagination(total, totalPages);
@@ -674,42 +682,49 @@ function renderTable() {
 function renderPagination(total, totalPages) {
   const bar = document.getElementById('paginationBar');
   if (totalPages <= 1) { bar.innerHTML = ''; return; }
-  let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===0?'disabled':''}>← Prev</button>`;
+  let html = '<button onclick="goPage(' + (currentPage-1) + ')" ' + (currentPage===0?'disabled':'') + '>← Prev</button>';
   const start = Math.max(0, currentPage - 2);
-  const end = Math.min(totalPages - 1, currentPage + 2);
-  if (start > 0) html += `<button onclick="goPage(0)">1</button>${start > 1 ? '<span>…</span>' : ''}`;
-  for (let i = start; i <= end; i++) {
-    html += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i+1}</button>`;
-  }
-  if (end < totalPages - 1) html += `${end < totalPages - 2 ? '<span>…</span>' : ''}<button onclick="goPage(${totalPages-1})">${totalPages}</button>`;
-  html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages-1?'disabled':''}>Next →</button>`;
-  html += `<span>${total.toLocaleString()} products · page ${currentPage+1} of ${totalPages}</span>`;
+  const end   = Math.min(totalPages - 1, currentPage + 2);
+  if (start > 0) html += '<button onclick="goPage(0)">1</button>' + (start > 1 ? '<span>…</span>' : '');
+  for (let i = start; i <= end; i++)
+    html += '<button class="' + (i===currentPage?'active':'') + '" onclick="goPage(' + i + ')">' + (i+1) + '</button>';
+  if (end < totalPages - 1) html += (end < totalPages - 2 ? '<span>…</span>' : '') + '<button onclick="goPage(' + (totalPages-1) + ')">' + totalPages + '</button>';
+  html += '<button onclick="goPage(' + (currentPage+1) + ')" ' + (currentPage===totalPages-1?'disabled':'') + '>Next →</button>';
+  html += '<span>' + total.toLocaleString() + ' products · page ' + (currentPage+1) + ' of ' + totalPages + '</span>';
   bar.innerHTML = html;
 }
 
 function goPage(p) { currentPage = p; renderTable(); window.scrollTo({top: 400, behavior: 'smooth'}); }
 
-// ── Inline edit handlers ──────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// INLINE EDIT HANDLERS
+// ─────────────────────────────────────────────────────────────────────────────
 function updateKw(idx, val) {
   allRows[idx].keywords = val;
+  // Keep stored cols in sync so export is correct
+  allRows[idx].cols[COL_KW] = val;
   const kws = val.trim() ? val.split(';').map(k=>k.trim()).filter(Boolean) : [];
   const meta = document.getElementById('kwmeta-' + idx);
   if (meta) meta.textContent = kws.length ? kws.length + ' keywords' : '';
 }
 
-function updateDesc(idx, val, el) {
+function updateDesc(idx, val) {
   allRows[idx].metaDesc = val;
+  // Keep stored cols in sync so export is correct
+  allRows[idx].cols[COL_META_DESC] = val;
   const len = val.trim().length;
   const meta = document.getElementById('descmeta-' + idx);
   if (meta) {
     meta.className = 'char-count ' + (len === 0 ? '' : len <= 160 ? 'char-ok' : 'char-over');
-    meta.textContent = len === 0 ? '' : `${len} chars${len > 160 ? ' — over limit' : len >= 150 ? ' ✓ ideal' : ' — short'}`;
+    meta.textContent = len === 0 ? '' : len + ' chars' + (len > 160 ? ' — over limit' : len >= 150 ? ' ✓ ideal' : ' — short');
   }
 }
 
 function esc(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── Live log ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// LIVE LOG
+// ─────────────────────────────────────────────────────────────────────────────
 let logSessionCount = 0;
 function logReset() {
   logSessionCount = 0;
@@ -720,59 +735,45 @@ function logReset() {
 function logPause() { document.getElementById('logDot').classList.add('paused'); }
 function logEntry(type, name, snippet) {
   const body = document.getElementById('liveLogBody');
-  const now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const div = document.createElement('div');
+  const now  = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div  = document.createElement('div');
   if (type === 'ok') {
     logSessionCount++;
     div.className = 'log-entry is-ok';
-    div.innerHTML = `<span class="log-icon">✓</span><span>${esc(name)}</span><span class="log-kw">${esc(snippet)}</span><span class="log-time">${now}</span>`;
-    document.getElementById('logCount').textContent = `${logSessionCount} written this session`;
+    div.innerHTML = '<span class="log-icon">✓</span><span>' + esc(name) + '</span><span class="log-kw">' + esc(snippet||'') + '</span><span class="log-time">' + now + '</span>';
+    document.getElementById('logCount').textContent = logSessionCount + ' written this session';
   } else if (type === 'wait') {
     div.className = 'log-entry is-wait';
-    div.innerHTML = `<span>⏳ ${esc(name)}</span><span class="log-time">${now}</span>`;
+    div.innerHTML = '<span>⏳ ' + esc(name) + '</span><span class="log-time">' + now + '</span>';
   } else {
     div.className = 'log-entry is-err';
-    div.innerHTML = `<span>✗ ${esc(name)}</span><span class="log-time">${now}</span>`;
+    div.innerHTML = '<span>✗ ' + esc(name) + '</span><span class="log-time">' + now + '</span>';
   }
   body.appendChild(div);
   document.getElementById('liveLog').scrollTop = document.getElementById('liveLog').scrollHeight;
 }
 
-// ── Resume banner ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// RESUME BANNER
+// ─────────────────────────────────────────────────────────────────────────────
 function showBanner(remaining, filled, total) {
-  document.getElementById('resumeText').textContent = `${filled.toLocaleString()} of ${total.toLocaleString()} products done. ${remaining.toLocaleString()} still need processing.`;
+  document.getElementById('resumeText').textContent = filled.toLocaleString() + ' of ' + total.toLocaleString() + ' products done. ' + remaining.toLocaleString() + ' still need processing.';
   document.getElementById('resumeBanner').classList.remove('hidden');
 }
 function hideBanner() { document.getElementById('resumeBanner').classList.add('hidden'); }
 
-// ── Prompts ───────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// PROMPTS
+// ─────────────────────────────────────────────────────────────────────────────
 function buildKwPrompt(products, kwN) {
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
     const rule = diamond
-      ? `[RULE: diamond product → MUST use "${karat} ${tone}" and include "natural diamonds"]`
-      : `[RULE: no diamonds → MUST use "${karat} ${tone}"]`;
-    return `${i+1}. "${p.name}"${p.meta?`\n   Meta hint: "${p.meta.slice(0,100)}"`:''}\n   ${rule}`;
+      ? '[RULE: diamond product → MUST use "' + karat + ' ' + tone + '" and include "natural diamonds"]'
+      : '[RULE: no diamonds → MUST use "' + karat + ' ' + tone + '"]';
+    return (i+1) + '. "' + p.name + '"' + (p.meta ? '\n   Meta hint: "' + p.meta.slice(0,100) + '"' : '') + '\n   ' + rule;
   }).join('\n\n');
-  return `You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.
-
-METAL RULES — strictly follow:
-1. Diamond products: 18K gold + always include "natural diamonds"
-2. Non-diamond: 14K gold (unless name says otherwise)
-3. Gold tone from name: yellow, white, or rose. Default yellow.
-
-Generate exactly ${kwN} SEO meta keywords per product:
-- Include exact metal karat + tone per rule
-- Include jewelry type, style/design from name, collection if present
-- Always include "Bony Levy" and "fine jewelry"
-- Semicolons only, lowercase except brand names and metal labels
-- Each keyword 1–4 words
-- Return ONLY a JSON array of strings, no markdown, no explanation
-
-Products:
-${list}
-
-Return exactly ${products.length} items: ["kw1; kw2; ...", ...]`;
+  return 'You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nMETAL RULES — strictly follow:\n1. Diamond products: 18K gold + always include "natural diamonds"\n2. Non-diamond: 14K gold (unless name says otherwise)\n3. Gold tone from name: yellow, white, or rose. Default yellow.\n\nGenerate exactly ' + kwN + ' SEO meta keywords per product:\n- Include exact metal karat + tone per rule\n- Include jewelry type, style/design from name, collection if present\n- Always include "Bony Levy" and "fine jewelry"\n- Semicolons only, lowercase except brand names and metal labels\n- Each keyword 1–4 words\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["kw1; kw2; ...", ...]';
 }
 
 function buildDescPrompt(products, lengthTarget) {
@@ -780,22 +781,9 @@ function buildDescPrompt(products, lengthTarget) {
   const target = targetMap[lengthTarget] || '150–160';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
-    return `${i+1}. "${p.name}" | ${karat} ${tone}${diamond?' | natural diamonds':''} | $${p.price}`;
+    return (i+1) + '. "' + p.name + '" | ' + karat + ' ' + tone + (diamond?' | natural diamonds':'') + ' | $' + p.price;
   }).join('\n');
-  return `You are writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Tone: refined, aspirational, concise. Target audience: affluent jewelry shoppers.
-
-Rules:
-- Exactly ${target} characters per description
-- Include product name, metal, key design features
-- Always mention "Bony Levy"
-- End with a soft CTA (e.g. "Shop now", "Discover the collection", "Explore fine jewelry")
-- No exclamation marks. No discount language. Luxury tone only.
-- Return ONLY a JSON array of strings, no markdown, no explanation
-
-Products:
-${list}
-
-Return exactly ${products.length} items: ["description 1", "description 2", ...]`;
+  return 'You are writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Tone: refined, aspirational, concise. Target audience: affluent jewelry shoppers.\n\nRules:\n- Exactly ' + target + ' characters per description\n- Include product name, metal, key design features\n- Always mention "Bony Levy"\n- End with a soft CTA (e.g. "Shop now", "Discover the collection", "Explore fine jewelry")\n- No exclamation marks. No discount language. Luxury tone only.\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["description 1", "description 2", ...]';
 }
 
 function buildBothPrompt(products, kwN, lengthTarget) {
@@ -803,35 +791,21 @@ function buildBothPrompt(products, kwN, lengthTarget) {
   const target = targetMap[lengthTarget] || '150–160';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
-    const rule = diamond
-      ? `[diamond → 18K gold + "natural diamonds"]`
-      : `[no diamonds → 14K gold]`;
-    return `${i+1}. "${p.name}" | $${p.price} | ${rule}`;
+    return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond → 18K gold + "natural diamonds"]' : '[no diamonds → 14K gold]');
   }).join('\n');
-  return `You are an SEO specialist for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.
-
-Generate both meta keywords AND meta description for each product.
-
-KEYWORD RULES: ${kwN} keywords, semicolons, include "Bony Levy", "fine jewelry", jewelry type, metal karat+tone, collection. Lowercase except brand/metal.
-DESCRIPTION RULES: ${target} chars, refined luxury tone, include "Bony Levy", metal, features, soft CTA, no exclamation marks.
-
-Return ONLY a JSON array of objects, no markdown:
-[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]
-
-Products:
-${list}
-
-Return exactly ${products.length} objects.`;
+  return 'You are an SEO specialist for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate both meta keywords AND meta description for each product.\n\nKEYWORD RULES: ' + kwN + ' keywords, semicolons, include "Bony Levy", "fine jewelry", jewelry type, metal karat+tone, collection. Lowercase except brand/metal.\nDESCRIPTION RULES: ' + target + ' chars, refined luxury tone, include "Bony Levy", metal, features, soft CTA, no exclamation marks.\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
 }
 
-// ── Progress ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────────────────────────────────────
 function updateProgress(mode) {
   const total = allRows.length;
   let filled;
   if (mode === 'descriptions') filled = allRows.filter(r => r.metaDesc.trim()).length;
-  else if (mode === 'both') filled = allRows.filter(r => r.keywords.trim() && r.metaDesc.trim()).length;
-  else filled = allRows.filter(r => r.keywords.trim()).length;
-  document.getElementById('progLabel').textContent = `${filled.toLocaleString()} / ${total.toLocaleString()} products processed`;
+  else if (mode === 'both')    filled = allRows.filter(r => r.keywords.trim() && r.metaDesc.trim()).length;
+  else                         filled = allRows.filter(r => r.keywords.trim()).length;
+  document.getElementById('progLabel').textContent = filled.toLocaleString() + ' / ' + total.toLocaleString() + ' products processed';
   document.getElementById('progFill').style.width = (filled / total * 100) + '%';
   return filled;
 }
@@ -847,12 +821,14 @@ async function waitWithCountdown(ms, label) {
   while (Date.now() < end) {
     if (stopGen) return;
     const left = Math.ceil((end - Date.now()) / 1000);
-    document.getElementById('statusText').textContent = `${label} — retrying in ${left}s…`;
+    document.getElementById('statusText').textContent = label + ' — retrying in ' + left + 's…';
     await sleep(500);
   }
 }
 
-// ── Generation core ───────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// GENERATION CORE
+// ─────────────────────────────────────────────────────────────────────────────
 async function runGeneration(targets, mode, apiKey) {
   generating = true;
   let wasUserStopped = false;
@@ -868,19 +844,19 @@ async function runGeneration(targets, mode, apiKey) {
   document.getElementById('statusMsg').className = 'status-msg status-blue';
   document.getElementById('spinner').style.display = '';
 
-  const kwN = mode === 'both' ? document.getElementById('kwCountBoth').value : document.getElementById('kwCount').value;
+  const kwN     = mode === 'both' ? document.getElementById('kwCountBoth').value : document.getElementById('kwCount').value;
   const descLen = document.getElementById('descLength') ? document.getElementById('descLength').value : 'ideal';
-  const BATCH = 5;
+  const BATCH   = 5;
   const MAX_RETRIES = 5;
   let successCount = 0;
 
   for (let i = 0; i < targets.length; i += BATCH) {
     if (stopGen) { wasUserStopped = true; break; }
 
-    const batch = targets.slice(i, i + BATCH);
+    const batch   = targets.slice(i, i + BATCH);
     const batchEnd = Math.min(i + BATCH, targets.length);
     document.getElementById('statusMsg').className = 'status-msg status-blue';
-    document.getElementById('statusText').textContent = `Processing ${i+1}–${batchEnd} of ${targets.length}…`;
+    document.getElementById('statusText').textContent = 'Processing ' + (i+1) + '–' + batchEnd + ' of ' + targets.length + '…';
     updateProgress(mode);
     updateStats();
 
@@ -888,21 +864,26 @@ async function runGeneration(targets, mode, apiKey) {
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       if (stopGen) { wasUserStopped = true; break; }
       try {
-        const results = await callGemini(batch, mode, kwN, descLen, apiKey);
+        const results = await callGroq(batch, mode, kwN, descLen, apiKey);
         if (!Array.isArray(results) || results.length === 0) throw new Error('Invalid response format');
 
         results.forEach((res, j) => {
           if (!batch[j]) return;
+          const row = batch[j];
           if (mode === 'keywords' && typeof res === 'string' && res.trim()) {
-            batch[j].keywords = res; batch[j].aiGeneratedKw = true;
-            logEntry('ok', batch[j].name, res.split(';').slice(0,3).map(s=>s.trim()).join(' · '));
+            row.keywords = res;
+            row.cols[COL_KW] = res;           // *** sync cols array ***
+            row.aiGeneratedKw = true;
+            logEntry('ok', row.name, res.split(';').slice(0,3).map(s=>s.trim()).join(' · '));
           } else if (mode === 'descriptions' && typeof res === 'string' && res.trim()) {
-            batch[j].metaDesc = res; batch[j].aiGeneratedDesc = true;
-            logEntry('ok', batch[j].name, res.slice(0,60) + '…');
+            row.metaDesc = res;
+            row.cols[COL_META_DESC] = res;    // *** sync cols array ***
+            row.aiGeneratedDesc = true;
+            logEntry('ok', row.name, res.slice(0,60) + '…');
           } else if (mode === 'both' && res && typeof res === 'object') {
-            if (res.keywords) { batch[j].keywords = res.keywords; batch[j].aiGeneratedKw = true; }
-            if (res.description) { batch[j].metaDesc = res.description; batch[j].aiGeneratedDesc = true; }
-            logEntry('ok', batch[j].name, (res.keywords||'').split(';').slice(0,2).map(s=>s.trim()).join(' · '));
+            if (res.keywords)    { row.keywords = res.keywords;       row.cols[COL_KW] = res.keywords;       row.aiGeneratedKw = true; }
+            if (res.description) { row.metaDesc = res.description;    row.cols[COL_META_DESC] = res.description; row.aiGeneratedDesc = true; }
+            logEntry('ok', row.name, (res.keywords||'').split(';').slice(0,2).map(s=>s.trim()).join(' · '));
           }
         });
 
@@ -920,16 +901,16 @@ async function runGeneration(targets, mode, apiKey) {
         const waitMs = parseRetryDelay(e.message, attempt);
         document.getElementById('statusMsg').className = 'status-msg status-amber';
         if (hardLimit && attempt >= 2) {
-          logEntry('err', 'Daily quota exhausted — try again tomorrow or use a different key.');
+          logEntry('err', 'Daily quota exhausted — try again tomorrow or use a different key.', '');
           wasUserStopped = true; stopGen = true; break;
         }
-        logEntry('wait', `Attempt ${attempt+1} failed (${e.message.slice(0,60)}) — waiting ${Math.ceil(waitMs/1000)}s…`);
-        await waitWithCountdown(waitMs, `Attempt ${attempt+1} failed`);
+        logEntry('wait', 'Attempt ' + (attempt+1) + ' failed (' + e.message.slice(0,60) + ') — waiting ' + Math.ceil(waitMs/1000) + 's…', '');
+        await waitWithCountdown(waitMs, 'Attempt ' + (attempt+1) + ' failed');
       }
     }
 
     if (wasUserStopped || stopGen) break;
-    if (!batchSuccess) logEntry('err', `Batch ${i+1}–${batchEnd} skipped after ${MAX_RETRIES} attempts`);
+    if (!batchSuccess) logEntry('err', 'Batch ' + (i+1) + '–' + batchEnd + ' skipped after ' + MAX_RETRIES + ' attempts', '');
     if (i + BATCH < targets.length && !stopGen) await sleep(800);
   }
 
@@ -952,14 +933,14 @@ async function runGeneration(targets, mode, apiKey) {
       : allRows.filter(r => !r.keywords.trim());
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('statusText').textContent = `Stopped — ${successCount.toLocaleString()} written this session. ${pendingTargets.length.toLocaleString()} still need processing.`;
+    document.getElementById('statusText').textContent = 'Stopped — ' + successCount.toLocaleString() + ' written this session. ' + pendingTargets.length.toLocaleString() + ' still need processing.';
     showBanner(pendingTargets.length, finalFilled, allRows.length);
   } else {
     pendingTargets = [];
     stopGen = false;
     document.getElementById('statusMsg').className = 'status-msg status-green';
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('statusText').textContent = `Done! ${finalFilled.toLocaleString()} of ${allRows.length.toLocaleString()} products processed.`;
+    document.getElementById('statusText').textContent = 'Done! ' + finalFilled.toLocaleString() + ' of ' + allRows.length.toLocaleString() + ' products processed.';
     hideBanner();
   }
 }
@@ -974,15 +955,15 @@ async function startGeneration(mode) {
   if (generating) { stopGen = true; return; }
   const apiKey = getApiKeyOrAlert(); if (!apiKey) return;
 
-  let scope, targets;
+  let targets;
   if (mode === 'keywords') {
-    scope = document.getElementById('applyScopeKw').value;
+    const scope = document.getElementById('applyScopeKw').value;
     targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.keywords.trim());
   } else if (mode === 'descriptions') {
-    scope = document.getElementById('applyScopeDesc').value;
+    const scope = document.getElementById('applyScopeDesc').value;
     targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.metaDesc.trim());
   } else {
-    scope = document.getElementById('applyScopeBoth').value;
+    const scope = document.getElementById('applyScopeBoth').value;
     targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim());
   }
 
@@ -995,25 +976,24 @@ async function continueGeneration() {
   if (generating) return;
   const apiKey = getApiKeyOrAlert(); if (!apiKey) return;
   if (!pendingTargets.length) { alert('Nothing left to process!'); return; }
-  // Detect mode from what's pending
-  const hasEmptyKw = pendingTargets.some(r => !r.keywords.trim());
+  const hasEmptyKw   = pendingTargets.some(r => !r.keywords.trim());
   const hasEmptyDesc = pendingTargets.some(r => !r.metaDesc.trim());
   const mode = hasEmptyKw && hasEmptyDesc ? 'both' : hasEmptyDesc ? 'descriptions' : 'keywords';
   await runGeneration([...pendingTargets], mode, apiKey);
 }
 
-async function callGemini(batch, mode, kwN, descLen, apiKey) {
+// ─────────────────────────────────────────────────────────────────────────────
+// GROQ API CALL
+// ─────────────────────────────────────────────────────────────────────────────
+async function callGroq(batch, mode, kwN, descLen, apiKey) {
   let prompt;
-  if (mode === 'keywords') prompt = buildKwPrompt(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN);
+  if (mode === 'keywords')      prompt = buildKwPrompt(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN);
   else if (mode === 'descriptions') prompt = buildDescPrompt(batch.map(r=>({name:r.name,price:r.price})), descLen);
-  else prompt = buildBothPrompt(batch.map(r=>({name:r.name,price:r.price})), kwN, descLen);
+  else                          prompt = buildBothPrompt(batch.map(r=>({name:r.name,price:r.price})), kwN, descLen);
 
   const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       temperature: 0.2,
@@ -1027,8 +1007,7 @@ async function callGemini(batch, mode, kwN, descLen, apiKey) {
 
   if (!resp.ok) {
     const err = await resp.json().catch(()=>({}));
-    const msg = err?.error?.message || `HTTP ${resp.status}`;
-    throw new Error(msg);
+    throw new Error(err?.error?.message || 'HTTP ' + resp.status);
   }
 
   const data = await resp.json();
@@ -1036,12 +1015,11 @@ async function callGemini(batch, mode, kwN, descLen, apiKey) {
   if (!raw) throw new Error('Empty response from Groq API');
 
   const clean = raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
-
   let parsed;
   try {
     parsed = JSON.parse(clean);
   } catch(e) {
-    const match = clean.match(/\[\s\S]*\]/);
+    const match = clean.match(/\[[\s\S]*\]/);   // *** fixed regex: was \[\s\S]* ***
     if (match) {
       try { parsed = JSON.parse(match[0]); }
       catch(e2) { throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200)); }
@@ -1056,30 +1034,45 @@ async function callGemini(batch, mode, kwN, descLen, apiKey) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// ── CSV export ────────────────────────────────────────────────────────────────
-// Always quote every field — safest approach for BigCommerce import
+// ─────────────────────────────────────────────────────────────────────────────
+// CSV EXPORT — THE KEY FIX
+// Always quote every cell. Uses the stored cols[] array (never re-parses the
+// raw line) so column indices cannot shift.
+// ─────────────────────────────────────────────────────────────────────────────
 function escCSV(v) {
-  const s = String(v == null ? '' : v);
-  return '"' + s.replace(/"/g, '""') + '"';
+  return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 }
 
 function downloadCSV() {
-  const kwMap = {}, descMap = {};
-  allRows.forEach(r => { kwMap[r.lineIndex] = r.keywords; descMap[r.lineIndex] = r.metaDesc; });
+  // Build a lookup from lineIndex → row object for O(1) access
+  const rowByLine = {};
+  allRows.forEach(r => { rowByLine[r.lineIndex] = r; });
+
   const out = originalLines.map((line, i) => {
-    if (i === 0 || !line.trim()) return line;
-    const cols = parseCSVLine(line);
-    if (cols[0] === 'Product') {
-      while (cols.length <= Math.max(COL_KW, COL_META_DESC)) cols.push('');
-      if (kwMap.hasOwnProperty(i)) cols[COL_KW] = kwMap[i];
-      if (descMap.hasOwnProperty(i)) cols[COL_META_DESC] = descMap[i];
-      return cols.map(escCSV).join(',');
-    }
-    return line;
+    if (i === 0 || !line.trim()) return line;          // header and blank lines untouched
+
+    const row = rowByLine[i];
+    if (!row) return line;                              // non-Product lines untouched
+
+    // Use the stored cols array (already parsed at load time, kept in sync by
+    // updateKw / updateDesc / generation). Never re-parse the raw line string.
+    const cols = row.cols.slice();                      // shallow copy so we don't mutate
+
+    // Ensure array is long enough
+    const maxCol = Math.max(COL_KW, COL_META_DESC);
+    while (cols.length <= maxCol) cols.push('');
+
+    // Write the two fields we own — everything else stays as-is
+    cols[COL_KW]       = row.keywords;
+    cols[COL_META_DESC] = row.metaDesc;
+
+    return cols.map(escCSV).join(',');
   });
-  const blob = new Blob([out.join('\n')], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'products_meta_bonylevy.csv'; a.click();
+
+  const blob = new Blob([out.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'products_meta_bonylevy.csv'; a.click();
   URL.revokeObjectURL(url);
   document.getElementById('downloadNote').textContent = '✓ Downloaded — import via Products → Import in BigCommerce';
 }
@@ -1093,31 +1086,34 @@ function resetApp() {
   document.getElementById('btnReset').style.display = 'none';
   document.getElementById('btnDownload').style.display = 'none';
   document.getElementById('fileInput').value = '';
+  document.getElementById('colDebug').style.display = 'none';
   hideErr();
 }
 
-// ── Sample Modal ──────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// SAMPLE MODAL
+// ─────────────────────────────────────────────────────────────────────────────
 const SAMPLE_PRODUCTS = [
-  { name: "14K White Gold Bony Levy Large Hoop Earrings", price: "425.00", type: "plain" },
-  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings", price: "1,550.00", type: "diamond" },
-  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace", price: "635.00", type: "plain" },
-  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring", price: "995.00", type: "diamond" },
+  { name: "14K White Gold Bony Levy Large Hoop Earrings",                        price: "425.00",   type: "plain"   },
+  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings",        price: "1,550.00", type: "diamond" },
+  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace",               price: "635.00",   type: "plain"   },
+  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring",       price: "995.00",   type: "diamond" },
 ];
 
 async function openSampleModal() {
   const apiKey = getApiKey();
   document.getElementById('sampleModal').classList.remove('hidden');
-  document.getElementById('sampleBody').innerHTML = `<div class="sample-loading"><div class="spinner"></div>Generating live samples with AI…</div>`;
+  document.getElementById('sampleBody').innerHTML = '<div class="sample-loading"><div class="spinner"></div>Generating live samples with AI…</div>';
   if (!apiKey) {
-    document.getElementById('sampleBody').innerHTML = `<div style="padding:1rem;font-size:13px;color:var(--text2);line-height:1.7;"><p style="margin-bottom:12px;">No API key saved yet. Here's a static preview:</p>${renderStaticSamples()}</div>`;
+    document.getElementById('sampleBody').innerHTML = '<div style="padding:1rem;font-size:13px;color:var(--text2);line-height:1.7;"><p style="margin-bottom:12px;">No API key saved yet. Here\'s a static preview:</p>' + renderStaticSamples() + '</div>';
     return;
   }
   try {
-    const results = await callGemini(SAMPLE_PRODUCTS, 'both', '8', 'ideal', apiKey);
+    const results = await callGroq(SAMPLE_PRODUCTS, 'both', '8', 'ideal', apiKey);
     const html = SAMPLE_PRODUCTS.map((p,i) => renderSampleItem(p, results[i]||{})).join('');
-    document.getElementById('sampleBody').innerHTML = html + `<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Groq key.</p>`;
+    document.getElementById('sampleBody').innerHTML = html + '<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Groq key.</p>';
   } catch(e) {
-    document.getElementById('sampleBody').innerHTML = `<div style="padding:1rem;color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+    document.getElementById('sampleBody').innerHTML = '<div style="padding:1rem;color:var(--red);font-size:13px;">Error: ' + e.message + '</div>';
   }
 }
 
@@ -1126,26 +1122,23 @@ function closeSampleModal(e) {
 }
 
 function renderSampleItem(prod, res) {
-  const kwString = typeof res === 'string' ? res : (res.keywords || '');
+  const kwString  = typeof res === 'string' ? res : (res.keywords || '');
   const descString = typeof res === 'object' ? (res.description || '') : '';
   const kws = kwString.split(';').map(k=>k.trim()).filter(Boolean);
   const isDiamond = prod.type === 'diamond';
   const tagsHtml = kws.map(k => {
     const cls = /natural diamond/i.test(k) ? ' is-diamond' : (/bony levy|fine jewelry/i.test(k) ? ' is-brand' : '');
-    return `<span class="sample-kw-tag${cls}">${esc(k)}</span>`;
+    return '<span class="sample-kw-tag' + cls + '">' + esc(k) + '</span>';
   }).join('');
   const descLen = descString.length;
   const descCls = descLen > 160 ? 'char-over' : descLen >= 150 ? 'char-ok' : 'char-warn';
-  return `<div class="sample-item">
-    <div class="sample-prod-hdr"><span class="sample-prod-name">${esc(prod.name)}</span><span class="sample-prod-price">$${prod.price}</span></div>
-    <div class="sample-body">
-      ${kwString ? `<div class="sample-kw-label">Keywords (${kws.length})</div><div class="sample-kw-list">${tagsHtml}</div><div class="sample-kw-raw">${esc(kwString)}</div>` : ''}
-      ${descString ? `<div class="sample-kw-label" style="margin-top:10px;">Meta description</div>
-        <div class="sample-kw-raw">${esc(descString)}</div>
-        <div class="char-count ${descCls}" style="margin-top:4px;">${descLen} chars${descLen>160?' — over limit':descLen>=150?' ✓ ideal':' — short'}</div>` : ''}
-      <div class="sample-rule-note">⟐ ${isDiamond ? 'Diamond rule applied: 18K gold + natural diamonds' : 'Non-diamond rule applied: 14K gold'}</div>
-    </div>
-  </div>`;
+  return '<div class="sample-item">' +
+    '<div class="sample-prod-hdr"><span class="sample-prod-name">' + esc(prod.name) + '</span><span class="sample-prod-price">$' + prod.price + '</span></div>' +
+    '<div class="sample-body">' +
+    (kwString ? '<div class="sample-kw-label">Keywords (' + kws.length + ')</div><div class="sample-kw-list">' + tagsHtml + '</div><div class="sample-kw-raw">' + esc(kwString) + '</div>' : '') +
+    (descString ? '<div class="sample-kw-label" style="margin-top:10px;">Meta description</div><div class="sample-kw-raw">' + esc(descString) + '</div><div class="char-count ' + descCls + '" style="margin-top:4px;">' + descLen + ' chars' + (descLen>160?' — over limit':descLen>=150?' ✓ ideal':' — short') + '</div>' : '') +
+    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule applied: 18K gold + natural diamonds' : 'Non-diamond rule applied: 14K gold') + '</div>' +
+    '</div></div>';
 }
 
 function renderStaticSamples() {
