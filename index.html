@@ -16,19 +16,13 @@
   --radius: 8px; --radius-lg: 14px; --font: 'DM Sans', sans-serif; --font-display: 'Cormorant Garamond', serif;
 }
 body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
-header {
-  background: var(--text); padding: 0 2.5rem; height: 62px; display: flex; align-items: center;
-  justify-content: space-between; position: sticky; top: 0; z-index: 100;
-}
+header { background: var(--text); padding: 0 2.5rem; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
 .header-brand { display: flex; align-items: baseline; gap: 14px; }
 .header-brand h1 { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: #fff; letter-spacing: 0.04em; }
 .header-sub { font-size: 11px; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; }
 .gold-pill { font-size: 11px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #fff; border-radius: 99px; padding: 3px 10px; font-weight: 500; letter-spacing: 0.03em; }
 .container { max-width: 1320px; margin: 0 auto; padding: 2.5rem 2rem; }
-.upload-card {
-  background: var(--bg); border: 1.5px dashed var(--gold-border); border-radius: var(--radius-lg);
-  padding: 4rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-}
+.upload-card { background: var(--bg); border: 1.5px dashed var(--gold-border); border-radius: var(--radius-lg); padding: 4rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
 .upload-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(184,147,63,0.06) 0%, transparent 70%); pointer-events: none; }
 .upload-card:hover, .upload-card:focus { background: var(--gold-pale); border-color: var(--gold); outline: none; }
 .upload-card .icon { font-size: 40px; display: block; margin-bottom: 14px; }
@@ -73,7 +67,6 @@ header {
 .btn:hover { background: var(--bg2); }
 .btn-dark { background: var(--text); color: #fff; border-color: var(--text); }
 .btn-dark:hover { background: #333; }
-.btn-dark:disabled { background: var(--bg3); color: var(--text3); border-color: var(--border); cursor: not-allowed; }
 .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #fff; border: none; }
 .btn-gold:hover { background: linear-gradient(135deg, #a07a30, var(--gold)); }
 .btn-green { background: var(--green); color: #fff; border-color: var(--green); }
@@ -93,7 +86,7 @@ header {
 .toolbar input[type=text] { flex: 1; min-width: 180px; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
 .toolbar input[type=text]:focus { border-color: var(--gold); }
 .toolbar select { font-family: var(--font); font-size: 13px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
-.pagination { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
+.pagination { display: flex; gap: 6px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
 .pagination button { font-family: var(--font); font-size: 12px; padding: 5px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); cursor: pointer; }
 .pagination button:disabled { color: var(--text3); cursor: not-allowed; }
 .pagination button.active { background: var(--text); color: #fff; border-color: var(--text); }
@@ -103,7 +96,7 @@ table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 thead th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); padding: 10px 14px; background: var(--bg2); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cols-kw th:nth-child(1){width:44px;} .cols-kw th:nth-child(2){width:22%;} .cols-kw th:nth-child(3){width:48%;} .cols-kw th:nth-child(4){width:90px;}
 .cols-desc th:nth-child(1){width:44px;} .cols-desc th:nth-child(2){width:22%;} .cols-desc th:nth-child(3){width:48%;} .cols-desc th:nth-child(4){width:90px;}
-.cols-both th:nth-child(1){width:44px;} .cols-both th:nth-child(2){width:18%;} .cols-both th:nth-child(3){width:36%;} .cols-both th:nth-child(4){width:36%;} .cols-both th:nth-child(5){width:70px;}
+.cols-both th:nth-child(1){width:44px;} .cols-both th:nth-child(2){width:18%;} .cols-both th:nth-child(3){width:34%;} .cols-both th:nth-child(4){width:34%;} .cols-both th:nth-child(5){width:70px;}
 tbody tr { border-bottom: 1px solid var(--border); }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--gold-pale); }
@@ -130,10 +123,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 .action-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
 .note { font-size: 12px; color: var(--text2); }
 .hidden { display: none !important; }
-.resume-banner {
-  background: var(--amber-bg); border: 1px solid rgba(138,92,0,0.25); border-radius: var(--radius);
-  padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-}
+.resume-banner { background: var(--amber-bg); border: 1px solid rgba(138,92,0,0.25); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .resume-banner-text { font-size: 13px; color: var(--amber); line-height: 1.5; }
 .resume-banner-text strong { font-weight: 600; }
 .live-log { margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg2); max-height: 160px; overflow-y: auto; }
@@ -202,7 +192,9 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
   </div>
 
   <div id="uploadSection">
-    <div class="upload-card" id="uploadCard" tabindex="0" role="button" aria-label="Upload BigCommerce product CSV" onclick="document.getElementById('fileInput').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('fileInput').click()">
+    <div class="upload-card" id="uploadCard" tabindex="0" role="button" aria-label="Upload BigCommerce product CSV"
+      onclick="document.getElementById('fileInput').click()"
+      onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('fileInput').click()">
       <span class="icon">📂</span>
       <h2>Upload your BigCommerce product CSV</h2>
       <p>Products → Export → Download, then upload here</p>
@@ -213,7 +205,6 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
   <div id="editorSection" class="hidden">
 
     <div class="err-banner" id="errBanner"></div>
-    <!-- Column map debug info shown after load -->
     <div class="col-debug" id="colDebug"></div>
 
     <div class="stats-grid" id="statsGrid"></div>
@@ -235,6 +226,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           <button class="mode-tab" onclick="setMode('both')" id="tabBoth">Both at once</button>
         </div>
 
+        <!-- Keywords panel -->
         <div class="mode-panel active" id="panelKw">
           <div class="rules-card">
             <h4>Keyword rules</h4>
@@ -269,33 +261,35 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           </div>
         </div>
 
+        <!-- Descriptions panel -->
         <div class="mode-panel" id="panelDesc">
           <div class="rules-card">
-            <h4>Meta description rules</h4>
+            <h4>Meta description rules — senior SEO format</h4>
             <div class="rules-list">
-              <div class="rule-item"><span class="rule-dot"></span><span>150–160 characters ideal (Google truncates at 160)</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>Include product name, metal, key features</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>Always end with a soft call-to-action</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>Include <strong>Bony Levy</strong> brand name</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span><strong>Product type + metal + karat</strong> in the very first clause</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>160 chars displayed by Google — keyword-first, no filler</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>161–350 chars indexed — long-tail variants, use cases, metal colors</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Behavioral intent words: "made to layer", "build a stack", "everyday wear"</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Always include <strong>Bony Levy</strong> + collection name</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>No filler: no "handcrafted elegance", no "free shipping", no exclamation marks</span></div>
             </div>
           </div>
           <div class="brand-note">
-            <strong>Tone:</strong> Refined, aspirational, concise. Target: luxury jewelry shoppers. No exclamation marks. Example: <em>"Shop the Bardot 18K gold pavé diamond hoop earrings by Bony Levy — handcrafted fine jewelry for effortless elegance."</em>
+            <strong>Target:</strong> 280–350 characters total. First 160 chars = Google snippet (product + metal + brand + hook). 161–350 = indexed long-tail zone (variants, occasions, collection cross-links).
           </div>
           <div class="ai-row">
             <div class="field-grp">
               <label>Scope</label>
               <select id="applyScopeDesc">
+                <option value="all" selected>All products (overwrite existing)</option>
                 <option value="empty">Empty descriptions only</option>
-                <option value="all">All products (overwrite)</option>
               </select>
             </div>
             <div class="field-grp">
               <label>Target length</label>
               <select id="descLength">
-                <option value="short">Short (~120 chars)</option>
-                <option value="ideal" selected>Ideal (150–160 chars)</option>
-                <option value="long">Longer (~180 chars)</option>
+                <option value="ideal" selected>280–350 chars (recommended)</option>
+                <option value="short">160–220 chars (snippet only)</option>
               </select>
             </div>
             <div></div>
@@ -303,14 +297,15 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           </div>
         </div>
 
+        <!-- Both panel -->
         <div class="mode-panel" id="panelBoth">
-          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass — saves API calls and time.</div>
+          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass. Descriptions use the senior SEO format (280–350 chars). Existing descriptions will be <strong>overwritten</strong>.</div>
           <div class="ai-row">
             <div class="field-grp">
-              <label>Scope</label>
+              <label>Keywords scope</label>
               <select id="applyScopeBoth">
-                <option value="empty">Missing either field</option>
-                <option value="all">All products (overwrite both)</option>
+                <option value="all" selected>Overwrite all (keywords + descriptions)</option>
+                <option value="empty">Missing either field only</option>
               </select>
             </div>
             <div class="field-grp">
@@ -383,7 +378,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 <div class="modal-overlay hidden" id="sampleModal" onclick="closeSampleModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <h2>Sample keyword preview</h2>
+      <h2>Sample preview</h2>
       <button class="modal-close" onclick="closeSampleModal()">✕ Close</button>
     </div>
     <div class="modal-body" id="sampleBody"></div>
@@ -424,7 +419,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 function setMode(m) {
   currentMode = m;
-  const tabMap = { keywords: 'tabKw', descriptions: 'tabDesc', both: 'tabBoth' };
+  const tabMap   = { keywords: 'tabKw', descriptions: 'tabDesc', both: 'tabBoth' };
   const panelMap = { keywords: 'panelKw', descriptions: 'panelDesc', both: 'panelBoth' };
   ['keywords','descriptions','both'].forEach(id => {
     document.getElementById(tabMap[id]).classList.toggle('active', id === m);
@@ -448,6 +443,11 @@ function getGoldTone(name) {
   if (/white\s*gold/i.test(name)) return 'white gold';
   return 'yellow gold';
 }
+function colLetter(n) {
+  let s = ''; n++;
+  while (n > 0) { n--; s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26); }
+  return s;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CSV PARSING
@@ -457,13 +457,11 @@ function parseCSVLine(line) {
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
     if (c === '"') {
-      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ;
     } else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
     else cur += c;
   }
-  res.push(cur);
-  return res;
+  res.push(cur); return res;
 }
 
 document.getElementById('fileInput').addEventListener('change', e => {
@@ -476,29 +474,21 @@ document.getElementById('fileInput').addEventListener('change', e => {
 function processCSV(text) {
   originalLines = text.split(/\r?\n/);
   headers = parseCSVLine(originalLines[0]);
-
-  COL_KW       = headers.indexOf('Meta Keywords');
-  COL_NAME     = headers.indexOf('Name');
-  COL_ID       = headers.indexOf('Product ID') !== -1 ? headers.indexOf('Product ID') : headers.indexOf('ID');
-  COL_PRICE    = headers.indexOf('Price');
+  COL_KW        = headers.indexOf('Meta Keywords');
+  COL_NAME      = headers.indexOf('Name');
+  COL_ID        = headers.indexOf('Product ID') !== -1 ? headers.indexOf('Product ID') : headers.indexOf('ID');
+  COL_PRICE     = headers.indexOf('Price');
   COL_META_DESC = headers.indexOf('Meta Description');
 
-  // Column guard
   const missing = [];
   if (COL_NAME === -1) missing.push('Name');
   if (COL_KW === -1) missing.push('Meta Keywords');
   if (COL_META_DESC === -1) missing.push('Meta Description');
-  if (missing.length) {
-    showErr('Could not find required columns: ' + missing.join(', ') + '. Is this a BigCommerce product export CSV?');
-    return;
-  }
+  if (missing.length) { showErr('Could not find required columns: ' + missing.join(', ') + '. Is this a BigCommerce product export CSV?'); return; }
   hideErr();
 
-  // Show column debug info so you can verify
   const dbg = document.getElementById('colDebug');
-  dbg.textContent = 'Column map — Name: col ' + COL_NAME + ' | Meta Keywords: col ' + COL_KW +
-    ' (letter ' + colLetter(COL_KW) + ') | Meta Description: col ' + COL_META_DESC +
-    ' (letter ' + colLetter(COL_META_DESC) + ') | Price: col ' + COL_PRICE;
+  dbg.textContent = 'Column map — Name: col ' + COL_NAME + ' | Meta Keywords: col ' + COL_KW + ' (' + colLetter(COL_KW) + ') | Meta Description: col ' + COL_META_DESC + ' (' + colLetter(COL_META_DESC) + ') | Price: col ' + COL_PRICE;
   dbg.style.display = 'block';
 
   allRows = [];
@@ -516,8 +506,7 @@ function processCSV(text) {
         keywords: cols[COL_KW] || '',
         aiGeneratedKw: false,
         aiGeneratedDesc: false,
-        // *** KEY FIX: store the already-parsed cols array so export never re-parses ***
-        cols: cols
+        cols: cols   // stored parsed array — never re-parse raw line on export
       });
     }
   }
@@ -534,33 +523,25 @@ function processCSV(text) {
   renderTable();
 }
 
-// Convert 0-based column index to Excel letter (A, B, … Z, AA …)
-function colLetter(n) {
-  let s = '';
-  n++;
-  while (n > 0) { n--; s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26); }
-  return s;
-}
-
 function updateScopeLabels() {
-  const total = allRows.length;
+  const total     = allRows.length;
   const emptyKw   = allRows.filter(r => !r.keywords.trim()).length;
   const emptyDesc = allRows.filter(r => !r.metaDesc.trim()).length;
   const emptyBoth = allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim()).length;
   document.getElementById('applyScopeKw').options[0].text   = 'Empty keywords only (' + emptyKw.toLocaleString() + ')';
   document.getElementById('applyScopeKw').options[1].text   = 'All ' + total.toLocaleString() + ' products (overwrite)';
-  document.getElementById('applyScopeDesc').options[0].text = 'Empty descriptions only (' + emptyDesc.toLocaleString() + ')';
-  document.getElementById('applyScopeDesc').options[1].text = 'All ' + total.toLocaleString() + ' products (overwrite)';
-  document.getElementById('applyScopeBoth').options[0].text = 'Missing either field (' + emptyBoth.toLocaleString() + ')';
-  document.getElementById('applyScopeBoth').options[1].text = 'All ' + total.toLocaleString() + ' products (overwrite both)';
+  document.getElementById('applyScopeDesc').options[0].text = 'All ' + total.toLocaleString() + ' products (overwrite existing)';
+  document.getElementById('applyScopeDesc').options[1].text = 'Empty descriptions only (' + emptyDesc.toLocaleString() + ')';
+  document.getElementById('applyScopeBoth').options[0].text = 'Overwrite all ' + total.toLocaleString() + ' (keywords + descriptions)';
+  document.getElementById('applyScopeBoth').options[1].text = 'Missing either field (' + emptyBoth.toLocaleString() + ')';
 }
 
 function updateStats() {
-  const total     = allRows.length;
-  const filledKw  = allRows.filter(r => r.keywords.trim()).length;
+  const total      = allRows.length;
+  const filledKw   = allRows.filter(r => r.keywords.trim()).length;
   const filledDesc = allRows.filter(r => r.metaDesc.trim()).length;
-  const aiKw      = allRows.filter(r => r.aiGeneratedKw).length;
-  const aiDesc    = allRows.filter(r => r.aiGeneratedDesc).length;
+  const aiKw       = allRows.filter(r => r.aiGeneratedKw).length;
+  const aiDesc     = allRows.filter(r => r.aiGeneratedDesc).length;
   document.getElementById('statsGrid').innerHTML =
     '<div class="stat-card"><div class="stat-label">Total products</div><div class="stat-value">' + total.toLocaleString() + '</div></div>' +
     '<div class="stat-card"><div class="stat-label">Has keywords</div><div class="stat-value v-green">' + filledKw.toLocaleString() + '</div></div>' +
@@ -569,9 +550,6 @@ function updateStats() {
     '<div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-gold">' + Math.max(aiKw, aiDesc).toLocaleString() + '</div></div>';
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ERROR BANNER
-// ─────────────────────────────────────────────────────────────────────────────
 function showErr(msg) { const b = document.getElementById('errBanner'); b.textContent = '⚠ ' + msg; b.style.display = 'block'; }
 function hideErr() { document.getElementById('errBanner').style.display = 'none'; }
 
@@ -598,12 +576,12 @@ function debouncedRender() {
 }
 
 function renderTable() {
-  const rows = getFiltered();
-  const viewMode = document.getElementById('viewModeSel').value;
-  const total = rows.length;
+  const rows      = getFiltered();
+  const viewMode  = document.getElementById('viewModeSel').value;
+  const total     = rows.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   if (currentPage >= totalPages) currentPage = totalPages - 1;
-  const pageRows = rows.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
+  const pageRows  = rows.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
 
   document.getElementById('resultCount').textContent = total.toLocaleString() + ' products';
 
@@ -617,7 +595,7 @@ function renderTable() {
     tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords</th><th>Meta Description</th><th style="text-align:center;">Status</th></tr>';
   } else if (viewMode === 'descriptions') {
     mainTable.classList.add('cols-desc');
-    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(150–160 chars ideal)</span></th><th style="text-align:center;">Status</th></tr>';
+    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(280–350 chars target)</span></th><th style="text-align:center;">Status</th></tr>';
   } else {
     mainTable.classList.add('cols-kw');
     tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords <span style="text-transform:none;letter-spacing:0;font-weight:400;">(semicolon-separated)</span></th><th style="text-align:center;">Status</th></tr>';
@@ -625,50 +603,39 @@ function renderTable() {
 
   if (!pageRows.length) {
     tBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text2);">No products match.</td></tr>';
-    renderPagination(total, totalPages);
-    return;
+    renderPagination(total, totalPages); return;
   }
 
   tBody.innerHTML = pageRows.map(r => {
-    const idx = allRows.indexOf(r);
+    const idx       = allRows.indexOf(r);
     const globalNum = idx + 1;
 
-    // Keywords cell
-    const kws = r.keywords.trim() ? r.keywords.split(';').map(k => k.trim()).filter(Boolean) : [];
+    const kws  = r.keywords.trim() ? r.keywords.split(';').map(k => k.trim()).filter(Boolean) : [];
     const tags = kws.length ? '<div class="tag-row">' + kws.slice(0,5).map(k => {
       const cls = /natural diamond|diamond/i.test(k) ? ' tag-diamond' : (/18K|14K|gold/i.test(k) ? ' tag-gold' : '');
       return '<span class="tag' + cls + '">' + esc(k) + '</span>';
     }).join('') + (kws.length > 5 ? '<span class="tag">+' + (kws.length - 5) + '</span>' : '') + '</div>' : '';
-    const kwCell = '<td>' +
-      '<textarea class="kw-input" data-idx="' + idx + '" oninput="updateKw(' + idx + ',this.value)">' + esc(r.keywords) + '</textarea>' +
-      tags +
-      '<div class="kw-meta" id="kwmeta-' + idx + '">' + (kws.length ? kws.length + ' keywords' : '') + '</div>' +
-      '</td>';
+    const kwCell = '<td><textarea class="kw-input" oninput="updateKw(' + idx + ',this.value)">' + esc(r.keywords) + '</textarea>' + tags + '<div class="kw-meta" id="kwmeta-' + idx + '">' + (kws.length ? kws.length + ' keywords' : '') + '</div></td>';
 
-    // Description cell
-    const descLen = r.metaDesc.trim().length;
-    const descCls = descLen === 0 ? '' : descLen <= 160 ? 'char-ok' : 'char-over';
-    const descHint = descLen === 0 ? '' : descLen + ' chars' + (descLen > 160 ? ' — over limit' : descLen >= 150 ? ' ✓ ideal' : ' — short');
-    const descCell = '<td>' +
-      '<textarea class="desc-input" data-idx="' + idx + '" oninput="updateDesc(' + idx + ',this.value,this)">' + esc(r.metaDesc) + '</textarea>' +
-      '<div class="char-count ' + descCls + '" id="descmeta-' + idx + '">' + descHint + '</div>' +
-      '</td>';
+    const descLen  = r.metaDesc.trim().length;
+    const descCls  = descLen === 0 ? '' : (descLen >= 280 && descLen <= 350) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
+    const descHint = descLen === 0 ? '' : descLen + ' chars' + (descLen > 350 ? ' — over limit' : (descLen >= 280 ? ' ✓ ideal' : ' — short'));
+    const descCell = '<td><textarea class="desc-input" oninput="updateDesc(' + idx + ',this.value,this)">' + esc(r.metaDesc) + '</textarea><div class="char-count ' + descCls + '" id="descmeta-' + idx + '">' + descHint + '</div></td>';
 
-    // Status badge
-    const kwOk = !!r.keywords.trim(), descOk = !!r.metaDesc.trim();
+    const kwOk   = !!r.keywords.trim(), descOk = !!r.metaDesc.trim();
     let badge;
     if (viewMode === 'both') {
-      const kwBadge = kwOk ? (r.aiGeneratedKw ? '<span class="badge badge-ai">✦ KW</span>' : '<span class="badge badge-ok">✓ KW</span>') : '<span class="badge badge-empty">no KW</span>';
-      const dBadge  = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ Desc</span>' : '<span class="badge badge-ok">✓ Desc</span>') : '<span class="badge badge-empty">no Desc</span>';
-      badge = '<div style="display:flex;flex-direction:column;gap:4px;align-items:center;">' + kwBadge + dBadge + '</div>';
+      const kwB = kwOk   ? (r.aiGeneratedKw   ? '<span class="badge badge-ai">✦ KW</span>'   : '<span class="badge badge-ok">✓ KW</span>')   : '<span class="badge badge-empty">no KW</span>';
+      const dB  = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ Desc</span>' : '<span class="badge badge-ok">✓ Desc</span>') : '<span class="badge badge-empty">no Desc</span>';
+      badge = '<div style="display:flex;flex-direction:column;gap:4px;align-items:center;">' + kwB + dB + '</div>';
     } else if (viewMode === 'descriptions') {
       badge = descOk ? (r.aiGeneratedDesc ? '<span class="badge badge-ai">✦ AI</span>' : '<span class="badge badge-ok">✓ set</span>') : '<span class="badge badge-empty">empty</span>';
     } else {
       badge = kwOk ? (r.aiGeneratedKw ? '<span class="badge badge-ai">✦ AI</span>' : '<span class="badge badge-ok">✓ set</span>') : '<span class="badge badge-empty">empty</span>';
     }
 
-    const numCell = '<td style="color:var(--text3);font-size:12px;padding-top:12px;">' + globalNum + '</td>';
-    const nameCell = '<td><div class="prod-name">' + esc(r.name) + '</div><div class="prod-price">$' + parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></td>';
+    const numCell    = '<td style="color:var(--text3);font-size:12px;padding-top:12px;">' + globalNum + '</td>';
+    const nameCell   = '<td><div class="prod-name">' + esc(r.name) + '</div><div class="prod-price">$' + parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></td>';
     const statusCell = '<td style="text-align:center;padding-top:12px;">' + badge + '</td>';
 
     if (viewMode === 'both')         return '<tr>' + numCell + nameCell + kwCell + descCell + statusCell + '</tr>';
@@ -683,11 +650,9 @@ function renderPagination(total, totalPages) {
   const bar = document.getElementById('paginationBar');
   if (totalPages <= 1) { bar.innerHTML = ''; return; }
   let html = '<button onclick="goPage(' + (currentPage-1) + ')" ' + (currentPage===0?'disabled':'') + '>← Prev</button>';
-  const start = Math.max(0, currentPage - 2);
-  const end   = Math.min(totalPages - 1, currentPage + 2);
+  const start = Math.max(0, currentPage - 2), end = Math.min(totalPages - 1, currentPage + 2);
   if (start > 0) html += '<button onclick="goPage(0)">1</button>' + (start > 1 ? '<span>…</span>' : '');
-  for (let i = start; i <= end; i++)
-    html += '<button class="' + (i===currentPage?'active':'') + '" onclick="goPage(' + i + ')">' + (i+1) + '</button>';
+  for (let i = start; i <= end; i++) html += '<button class="' + (i===currentPage?'active':'') + '" onclick="goPage(' + i + ')">' + (i+1) + '</button>';
   if (end < totalPages - 1) html += (end < totalPages - 2 ? '<span>…</span>' : '') + '<button onclick="goPage(' + (totalPages-1) + ')">' + totalPages + '</button>';
   html += '<button onclick="goPage(' + (currentPage+1) + ')" ' + (currentPage===totalPages-1?'disabled':'') + '>Next →</button>';
   html += '<span>' + total.toLocaleString() + ' products · page ' + (currentPage+1) + ' of ' + totalPages + '</span>';
@@ -696,12 +661,8 @@ function renderPagination(total, totalPages) {
 
 function goPage(p) { currentPage = p; renderTable(); window.scrollTo({top: 400, behavior: 'smooth'}); }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// INLINE EDIT HANDLERS
-// ─────────────────────────────────────────────────────────────────────────────
 function updateKw(idx, val) {
   allRows[idx].keywords = val;
-  // Keep stored cols in sync so export is correct
   allRows[idx].cols[COL_KW] = val;
   const kws = val.trim() ? val.split(';').map(k=>k.trim()).filter(Boolean) : [];
   const meta = document.getElementById('kwmeta-' + idx);
@@ -710,13 +671,12 @@ function updateKw(idx, val) {
 
 function updateDesc(idx, val) {
   allRows[idx].metaDesc = val;
-  // Keep stored cols in sync so export is correct
   allRows[idx].cols[COL_META_DESC] = val;
-  const len = val.trim().length;
+  const len  = val.trim().length;
   const meta = document.getElementById('descmeta-' + idx);
   if (meta) {
-    meta.className = 'char-count ' + (len === 0 ? '' : len <= 160 ? 'char-ok' : 'char-over');
-    meta.textContent = len === 0 ? '' : len + ' chars' + (len > 160 ? ' — over limit' : len >= 150 ? ' ✓ ideal' : ' — short');
+    meta.className = 'char-count ' + (len === 0 ? '' : (len >= 280 && len <= 350) ? 'char-ok' : len > 350 ? 'char-over' : 'char-warn');
+    meta.textContent = len === 0 ? '' : len + ' chars' + (len > 350 ? ' — over limit' : len >= 280 ? ' ✓ ideal' : ' — short');
   }
 }
 
@@ -771,29 +731,27 @@ function buildKwPrompt(products, kwN) {
     const rule = diamond
       ? '[RULE: diamond product → MUST use "' + karat + ' ' + tone + '" and include "natural diamonds"]'
       : '[RULE: no diamonds → MUST use "' + karat + ' ' + tone + '"]';
-    return (i+1) + '. "' + p.name + '"' + (p.meta ? '\n   Meta hint: "' + p.meta.slice(0,100) + '"' : '') + '\n   ' + rule;
+    return (i+1) + '. "' + p.name + '"\n   ' + rule;
   }).join('\n\n');
   return 'You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nMETAL RULES — strictly follow:\n1. Diamond products: 18K gold + always include "natural diamonds"\n2. Non-diamond: 14K gold (unless name says otherwise)\n3. Gold tone from name: yellow, white, or rose. Default yellow.\n\nGenerate exactly ' + kwN + ' SEO meta keywords per product:\n- Include exact metal karat + tone per rule\n- Include jewelry type, style/design from name, collection if present\n- Always include "Bony Levy" and "fine jewelry"\n- Semicolons only, lowercase except brand names and metal labels\n- Each keyword 1–4 words\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["kw1; kw2; ...", ...]';
 }
 
 function buildDescPrompt(products, lengthTarget) {
-  const targetMap = { short: '100–130', ideal: '150–160', long: '170–185' };
-  const target = targetMap[lengthTarget] || '150–160';
+  const charTarget = lengthTarget === 'short' ? '160–220' : '280–350';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
-    return (i+1) + '. "' + p.name + '" | ' + karat + ' ' + tone + (diamond?' | natural diamonds':'') + ' | $' + p.price;
+    return (i+1) + '. "' + p.name + '" | ' + karat + ' ' + tone + (diamond ? ' | natural diamonds' : '') + ' | $' + p.price;
   }).join('\n');
-  return 'You are writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Tone: refined, aspirational, concise. Target audience: affluent jewelry shoppers.\n\nRules:\n- Exactly ' + target + ' characters per description\n- Include product name, metal, key design features\n- Always mention "Bony Levy"\n- End with a soft CTA (e.g. "Shop now", "Discover the collection", "Explore fine jewelry")\n- No exclamation marks. No discount language. Luxury tone only.\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["description 1", "description 2", ...]';
+  return 'You are a senior SEO specialist writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nSTRUCTURE — two zones:\nZone 1 (first ~160 chars, shown by Google): product type + metal karat + brand + behavioral hook. No filler. Keyword-first.\nZone 2 (chars 161–' + charTarget.split('–')[1] + ', indexed only): long-tail variants, metal color alternatives, use occasions, collection cross-links.\n\nRULES:\n- Total length: exactly ' + charTarget + ' characters\n- Lead with the searchable product noun (e.g. "Pavé diamond hoop earrings in 18K white gold")\n- Include "Bony Levy" and collection name\n- Use behavioral intent phrases: "made to layer", "build a stack", "everyday wear", "wear alone or stack"\n- Include all metal color variants in Zone 2 when relevant (yellow, white, rose gold)\n- No exclamation marks. No "free shipping". No "handcrafted elegance". No discount language.\n- Natural luxury tone — writes like a human, not a keyword list\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["description 1", "description 2", ...]';
 }
 
 function buildBothPrompt(products, kwN, lengthTarget) {
-  const targetMap = { short: '100–130', ideal: '150–160', long: '170–185' };
-  const target = targetMap[lengthTarget] || '150–160';
+  const charTarget = lengthTarget === 'short' ? '160–220' : '280–350';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
-    return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond → 18K gold + "natural diamonds"]' : '[no diamonds → 14K gold]');
+    return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond → ' + karat + ' ' + tone + ' + "natural diamonds"]' : '[no diamonds → ' + karat + ' ' + tone + ']');
   }).join('\n');
-  return 'You are an SEO specialist for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate both meta keywords AND meta description for each product.\n\nKEYWORD RULES: ' + kwN + ' keywords, semicolons, include "Bony Levy", "fine jewelry", jewelry type, metal karat+tone, collection. Lowercase except brand/metal.\nDESCRIPTION RULES: ' + target + ' chars, refined luxury tone, include "Bony Levy", metal, features, soft CTA, no exclamation marks.\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
+  return 'You are a senior SEO specialist for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate BOTH meta keywords AND meta description for each product.\n\nKEYWORD RULES (' + kwN + ' keywords, semicolon-separated):\n- Include exact metal karat + tone\n- Diamond products: 18K gold + "natural diamonds"\n- Non-diamond: 14K gold\n- Always include "Bony Levy" and "fine jewelry"\n- Include jewelry type, collection name if present\n- Lowercase except brand names and metal labels\n\nDESCRIPTION RULES (senior SEO format, ' + charTarget + ' chars total):\nZone 1 (first ~160 chars): product type + metal karat + tone + brand + behavioral hook. Keyword-first. No filler.\nZone 2 (161–' + charTarget.split('–')[1] + ' chars): long-tail variants, metal color alternatives, use occasions, collection cross-links.\n- Lead with searchable product noun\n- Use behavioral phrases: "made to layer", "build a stack", "everyday wear"\n- Include all metal color variants in Zone 2 when relevant\n- No exclamation marks. No "free shipping". No "handcrafted elegance".\n- Natural luxury tone — not a keyword list\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -832,13 +790,11 @@ async function waitWithCountdown(ms, label) {
 async function runGeneration(targets, mode, apiKey) {
   generating = true;
   let wasUserStopped = false;
-  hideBanner();
-  logReset();
+  hideBanner(); logReset();
 
   const genBtnId = mode === 'keywords' ? 'btnGenerateKw' : mode === 'descriptions' ? 'btnGenerateDesc' : 'btnGenerateBoth';
   const genBtn = document.getElementById(genBtnId);
-  genBtn.textContent = '⏹ Stopping…';
-  genBtn.style.opacity = '0.7';
+  genBtn.textContent = '⏹ Stop'; genBtn.style.opacity = '0.7';
 
   document.getElementById('progSection').classList.remove('hidden');
   document.getElementById('statusMsg').className = 'status-msg status-blue';
@@ -846,19 +802,16 @@ async function runGeneration(targets, mode, apiKey) {
 
   const kwN     = mode === 'both' ? document.getElementById('kwCountBoth').value : document.getElementById('kwCount').value;
   const descLen = document.getElementById('descLength') ? document.getElementById('descLength').value : 'ideal';
-  const BATCH   = 5;
-  const MAX_RETRIES = 5;
+  const BATCH = 5, MAX_RETRIES = 5;
   let successCount = 0;
 
   for (let i = 0; i < targets.length; i += BATCH) {
     if (stopGen) { wasUserStopped = true; break; }
-
-    const batch   = targets.slice(i, i + BATCH);
+    const batch    = targets.slice(i, i + BATCH);
     const batchEnd = Math.min(i + BATCH, targets.length);
     document.getElementById('statusMsg').className = 'status-msg status-blue';
     document.getElementById('statusText').textContent = 'Processing ' + (i+1) + '–' + batchEnd + ' of ' + targets.length + '…';
-    updateProgress(mode);
-    updateStats();
+    updateProgress(mode); updateStats();
 
     let batchSuccess = false;
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -871,39 +824,29 @@ async function runGeneration(targets, mode, apiKey) {
           if (!batch[j]) return;
           const row = batch[j];
           if (mode === 'keywords' && typeof res === 'string' && res.trim()) {
-            row.keywords = res;
-            row.cols[COL_KW] = res;           // *** sync cols array ***
-            row.aiGeneratedKw = true;
+            row.keywords = res; row.cols[COL_KW] = res; row.aiGeneratedKw = true;
             logEntry('ok', row.name, res.split(';').slice(0,3).map(s=>s.trim()).join(' · '));
           } else if (mode === 'descriptions' && typeof res === 'string' && res.trim()) {
-            row.metaDesc = res;
-            row.cols[COL_META_DESC] = res;    // *** sync cols array ***
-            row.aiGeneratedDesc = true;
+            row.metaDesc = res; row.cols[COL_META_DESC] = res; row.aiGeneratedDesc = true;
             logEntry('ok', row.name, res.slice(0,60) + '…');
           } else if (mode === 'both' && res && typeof res === 'object') {
-            if (res.keywords)    { row.keywords = res.keywords;       row.cols[COL_KW] = res.keywords;       row.aiGeneratedKw = true; }
-            if (res.description) { row.metaDesc = res.description;    row.cols[COL_META_DESC] = res.description; row.aiGeneratedDesc = true; }
+            if (res.keywords)    { row.keywords = res.keywords;    row.cols[COL_KW] = res.keywords;       row.aiGeneratedKw = true; }
+            if (res.description) { row.metaDesc = res.description; row.cols[COL_META_DESC] = res.description; row.aiGeneratedDesc = true; }
             logEntry('ok', row.name, (res.keywords||'').split(';').slice(0,2).map(s=>s.trim()).join(' · '));
           }
         });
 
         successCount += batch.length;
-        updateProgress(mode);
-        updateStats();
-        updateScopeLabels();
+        updateProgress(mode); updateStats(); updateScopeLabels();
         if (i % (BATCH * 4) === 0) renderTable();
-        batchSuccess = true;
-        break;
+        batchSuccess = true; break;
 
       } catch(e) {
         if (stopGen) { wasUserStopped = true; break; }
         const hardLimit = isQuotaExhausted(e.message);
-        const waitMs = parseRetryDelay(e.message, attempt);
+        const waitMs    = parseRetryDelay(e.message, attempt);
         document.getElementById('statusMsg').className = 'status-msg status-amber';
-        if (hardLimit && attempt >= 2) {
-          logEntry('err', 'Daily quota exhausted — try again tomorrow or use a different key.', '');
-          wasUserStopped = true; stopGen = true; break;
-        }
+        if (hardLimit && attempt >= 2) { logEntry('err', 'Daily quota exhausted — try again tomorrow or use a different key.', ''); wasUserStopped = true; stopGen = true; break; }
         logEntry('wait', 'Attempt ' + (attempt+1) + ' failed (' + e.message.slice(0,60) + ') — waiting ' + Math.ceil(waitMs/1000) + 's…', '');
         await waitWithCountdown(waitMs, 'Attempt ' + (attempt+1) + ' failed');
       }
@@ -914,30 +857,22 @@ async function runGeneration(targets, mode, apiKey) {
     if (i + BATCH < targets.length && !stopGen) await sleep(800);
   }
 
-  generating = false;
-  logPause();
+  generating = false; logPause();
   genBtn.textContent = mode === 'keywords' ? '✦ Generate keywords' : mode === 'descriptions' ? '✦ Generate descriptions' : '✦ Generate both';
   genBtn.style.opacity = '';
 
   const finalFilled = updateProgress(mode);
-  updateStats();
-  updateScopeLabels();
-  renderTable();
+  updateStats(); updateScopeLabels(); renderTable();
 
   if (wasUserStopped || stopGen) {
     stopGen = false;
-    pendingTargets = mode === 'descriptions'
-      ? allRows.filter(r => !r.metaDesc.trim())
-      : mode === 'both'
-      ? allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim())
-      : allRows.filter(r => !r.keywords.trim());
+    pendingTargets = mode === 'descriptions' ? allRows.filter(r => !r.metaDesc.trim()) : mode === 'both' ? allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim()) : allRows.filter(r => !r.keywords.trim());
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('statusText').textContent = 'Stopped — ' + successCount.toLocaleString() + ' written this session. ' + pendingTargets.length.toLocaleString() + ' still need processing.';
     showBanner(pendingTargets.length, finalFilled, allRows.length);
   } else {
-    pendingTargets = [];
-    stopGen = false;
+    pendingTargets = []; stopGen = false;
     document.getElementById('statusMsg').className = 'status-msg status-green';
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('statusText').textContent = 'Done! ' + finalFilled.toLocaleString() + ' of ' + allRows.length.toLocaleString() + ' products processed.';
@@ -983,23 +918,23 @@ async function continueGeneration() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GROQ API CALL
+// GROQ API
 // ─────────────────────────────────────────────────────────────────────────────
 async function callGroq(batch, mode, kwN, descLen, apiKey) {
   let prompt;
-  if (mode === 'keywords')      prompt = buildKwPrompt(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN);
+  if (mode === 'keywords')          prompt = buildKwPrompt(batch.map(r=>({name:r.name})), kwN);
   else if (mode === 'descriptions') prompt = buildDescPrompt(batch.map(r=>({name:r.name,price:r.price})), descLen);
-  else                          prompt = buildBothPrompt(batch.map(r=>({name:r.name,price:r.price})), kwN, descLen);
+  else                              prompt = buildBothPrompt(batch.map(r=>({name:r.name,price:r.price})), kwN, descLen);
 
   const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      temperature: 0.2,
-      max_tokens: 3000,
+      temperature: 0.25,
+      max_tokens: 4000,
       messages: [
-        { role: 'system', content: 'You are a precise SEO specialist. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
+        { role: 'system', content: 'You are a senior SEO specialist. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
         { role: 'user', content: prompt }
       ]
     })
@@ -1010,24 +945,18 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
     throw new Error(err?.error?.message || 'HTTP ' + resp.status);
   }
 
-  const data = await resp.json();
-  const raw = data.choices?.[0]?.message?.content || '';
+  const data  = await resp.json();
+  const raw   = data.choices?.[0]?.message?.content || '';
   if (!raw) throw new Error('Empty response from Groq API');
 
   const clean = raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
   let parsed;
-  try {
-    parsed = JSON.parse(clean);
-  } catch(e) {
-    const match = clean.match(/\[[\s\S]*\]/);   // *** fixed regex: was \[\s\S]* ***
-    if (match) {
-      try { parsed = JSON.parse(match[0]); }
-      catch(e2) { throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200)); }
-    } else {
-      throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200));
-    }
+  try { parsed = JSON.parse(clean); }
+  catch(e) {
+    const match = clean.match(/\[[\s\S]*\]/);
+    if (match) { try { parsed = JSON.parse(match[0]); } catch(e2) { throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200)); } }
+    else throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200));
   }
-
   if (!Array.isArray(parsed)) throw new Error('API returned non-array response');
   return parsed;
 }
@@ -1035,37 +964,23 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CSV EXPORT — THE KEY FIX
-// Always quote every cell. Uses the stored cols[] array (never re-parses the
-// raw line) so column indices cannot shift.
+// CSV EXPORT — uses stored cols[], never re-parses raw lines
 // ─────────────────────────────────────────────────────────────────────────────
-function escCSV(v) {
-  return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-}
+function escCSV(v) { return '"' + String(v==null?'':v).replace(/"/g,'""') + '"'; }
 
 function downloadCSV() {
-  // Build a lookup from lineIndex → row object for O(1) access
   const rowByLine = {};
   allRows.forEach(r => { rowByLine[r.lineIndex] = r; });
 
   const out = originalLines.map((line, i) => {
-    if (i === 0 || !line.trim()) return line;          // header and blank lines untouched
-
+    if (i === 0 || !line.trim()) return line;
     const row = rowByLine[i];
-    if (!row) return line;                              // non-Product lines untouched
-
-    // Use the stored cols array (already parsed at load time, kept in sync by
-    // updateKw / updateDesc / generation). Never re-parse the raw line string.
-    const cols = row.cols.slice();                      // shallow copy so we don't mutate
-
-    // Ensure array is long enough
+    if (!row) return line;
+    const cols = row.cols.slice();
     const maxCol = Math.max(COL_KW, COL_META_DESC);
     while (cols.length <= maxCol) cols.push('');
-
-    // Write the two fields we own — everything else stays as-is
-    cols[COL_KW]       = row.keywords;
+    cols[COL_KW]        = row.keywords;
     cols[COL_META_DESC] = row.metaDesc;
-
     return cols.map(escCSV).join(',');
   });
 
@@ -1094,24 +1009,23 @@ function resetApp() {
 // SAMPLE MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 const SAMPLE_PRODUCTS = [
-  { name: "14K White Gold Bony Levy Large Hoop Earrings",                        price: "425.00",   type: "plain"   },
-  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings",        price: "1,550.00", type: "diamond" },
-  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace",               price: "635.00",   type: "plain"   },
-  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring",       price: "995.00",   type: "diamond" },
+  { name: "14K White Gold Bony Levy Large Hoop Earrings",                  price: "425.00",   type: "plain"   },
+  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings",  price: "1550.00",  type: "diamond" },
+  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace",         price: "635.00",   type: "plain"   },
+  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring", price: "995.00",   type: "diamond" },
 ];
 
 async function openSampleModal() {
   const apiKey = getApiKey();
   document.getElementById('sampleModal').classList.remove('hidden');
-  document.getElementById('sampleBody').innerHTML = '<div class="sample-loading"><div class="spinner"></div>Generating live samples with AI…</div>';
+  document.getElementById('sampleBody').innerHTML = '<div class="sample-loading"><div class="spinner"></div>Generating live samples…</div>';
   if (!apiKey) {
     document.getElementById('sampleBody').innerHTML = '<div style="padding:1rem;font-size:13px;color:var(--text2);line-height:1.7;"><p style="margin-bottom:12px;">No API key saved yet. Here\'s a static preview:</p>' + renderStaticSamples() + '</div>';
     return;
   }
   try {
     const results = await callGroq(SAMPLE_PRODUCTS, 'both', '8', 'ideal', apiKey);
-    const html = SAMPLE_PRODUCTS.map((p,i) => renderSampleItem(p, results[i]||{})).join('');
-    document.getElementById('sampleBody').innerHTML = html + '<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Groq key.</p>';
+    document.getElementById('sampleBody').innerHTML = SAMPLE_PRODUCTS.map((p,i) => renderSampleItem(p, results[i]||{})).join('') + '<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Groq key.</p>';
   } catch(e) {
     document.getElementById('sampleBody').innerHTML = '<div style="padding:1rem;color:var(--red);font-size:13px;">Error: ' + e.message + '</div>';
   }
@@ -1122,31 +1036,31 @@ function closeSampleModal(e) {
 }
 
 function renderSampleItem(prod, res) {
-  const kwString  = typeof res === 'string' ? res : (res.keywords || '');
+  const kwString   = typeof res === 'string' ? res : (res.keywords || '');
   const descString = typeof res === 'object' ? (res.description || '') : '';
-  const kws = kwString.split(';').map(k=>k.trim()).filter(Boolean);
-  const isDiamond = prod.type === 'diamond';
-  const tagsHtml = kws.map(k => {
+  const kws        = kwString.split(';').map(k=>k.trim()).filter(Boolean);
+  const isDiamond  = prod.type === 'diamond';
+  const tagsHtml   = kws.map(k => {
     const cls = /natural diamond/i.test(k) ? ' is-diamond' : (/bony levy|fine jewelry/i.test(k) ? ' is-brand' : '');
     return '<span class="sample-kw-tag' + cls + '">' + esc(k) + '</span>';
   }).join('');
   const descLen = descString.length;
-  const descCls = descLen > 160 ? 'char-over' : descLen >= 150 ? 'char-ok' : 'char-warn';
+  const descCls = (descLen >= 280 && descLen <= 350) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
+  const descHint = descLen + ' chars' + (descLen > 350 ? ' — over limit' : descLen >= 280 ? ' ✓ ideal' : ' — short');
   return '<div class="sample-item">' +
     '<div class="sample-prod-hdr"><span class="sample-prod-name">' + esc(prod.name) + '</span><span class="sample-prod-price">$' + prod.price + '</span></div>' +
     '<div class="sample-body">' +
     (kwString ? '<div class="sample-kw-label">Keywords (' + kws.length + ')</div><div class="sample-kw-list">' + tagsHtml + '</div><div class="sample-kw-raw">' + esc(kwString) + '</div>' : '') +
-    (descString ? '<div class="sample-kw-label" style="margin-top:10px;">Meta description</div><div class="sample-kw-raw">' + esc(descString) + '</div><div class="char-count ' + descCls + '" style="margin-top:4px;">' + descLen + ' chars' + (descLen>160?' — over limit':descLen>=150?' ✓ ideal':' — short') + '</div>' : '') +
-    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule applied: 18K gold + natural diamonds' : 'Non-diamond rule applied: 14K gold') + '</div>' +
+    (descString ? '<div class="sample-kw-label" style="margin-top:10px;">Meta description</div><div class="sample-kw-raw">' + esc(descString) + '</div><div class="char-count ' + descCls + '" style="margin-top:4px;">' + descHint + '</div>' : '') +
+    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule: 18K gold + natural diamonds | Senior SEO format' : 'Non-diamond rule: 14K gold | Senior SEO format') + '</div>' +
     '</div></div>';
 }
 
 function renderStaticSamples() {
-  const staticData = [
-    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold earrings; luxury earrings; gold hoop earrings", description: "Shop Bony Levy large hoop earrings in 14K white gold — handcrafted fine jewelry with timeless style. Discover the collection." } },
-    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold earrings", description: "Bony Levy small hoop earrings set with natural diamonds in 18K white gold. Refined luxury fine jewelry crafted in Los Angeles. Shop now." } },
-  ];
-  return staticData.map(d => renderSampleItem(d.prod, d.res)).join('');
+  return [
+    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold gold earrings; luxury earrings; gold hoop earrings", description: "Large hoop earrings in 14K white gold by Bony Levy. Bold, lightweight, made to wear every day or stack with studs. Shop Bony Levy white gold hoops — available in small, medium, and large. Pairs with huggies, ear cuffs, and diamond styles from the full earrings collection." } },
+    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold diamond earrings", description: "Small pavé diamond hoop earrings in 18K white gold by Bony Levy. Natural diamonds, worn close to the ear. Shop Bony Levy diamond hoop earrings — also available in 18K yellow and rose gold. A timeless fine jewelry gift for anniversaries, engagements, or everyday luxury." } },
+  ].map(d => renderSampleItem(d.prod, d.res)).join('');
 }
 </script>
 </body>
