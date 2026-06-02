@@ -266,16 +266,16 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
           <div class="rules-card">
             <h4>Meta description rules — senior SEO format</h4>
             <div class="rules-list">
-              <div class="rule-item"><span class="rule-dot"></span><span><strong>Product type + metal + karat</strong> in the very first clause</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>160 chars displayed by Google — keyword-first, no filler</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>161–350 chars indexed — long-tail variants, use cases, metal colors</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>Behavioral intent words: "made to layer", "build a stack", "everyday wear"</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span><strong>Proper sentences</strong> with capitalization and punctuation — never a keyword string</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Zone 1 (~160 chars): one complete sentence — product + metal + brand + hook</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Zone 2 (161–350 chars): 1–2 sentences — long-tail variants, use cases, metal colors</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Minimum 280 chars — never repeat product name verbatim twice</span></div>
               <div class="rule-item"><span class="rule-dot"></span><span>Always include <strong>Bony Levy</strong> + collection name</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>No filler: no "handcrafted elegance", no "free shipping", no exclamation marks</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>No filler phrases, no exclamation marks, no "free shipping"</span></div>
             </div>
           </div>
           <div class="brand-note">
-            <strong>Target:</strong> 280–350 characters total. First 160 chars = Google snippet (product + metal + brand + hook). 161–350 = indexed long-tail zone (variants, occasions, collection cross-links).
+            <strong>Target:</strong> 280–350 characters total. Zone 1 = Google snippet (complete sentence). Zone 2 = indexed long-tail zone (variants, occasions, cross-links — also complete sentences).
           </div>
           <div class="ai-row">
             <div class="field-grp">
@@ -299,7 +299,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 
         <!-- Both panel -->
         <div class="mode-panel" id="panelBoth">
-          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass. Descriptions use the senior SEO format (280–350 chars). Existing descriptions will be <strong>overwritten</strong>.</div>
+          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass. Descriptions use the senior SEO format (280–350 chars, proper sentences). Existing descriptions will be <strong>overwritten</strong>.</div>
           <div class="ai-row">
             <div class="field-grp">
               <label>Keywords scope</label>
@@ -393,6 +393,7 @@ let allRows = [], headers = [], originalLines = [];
 let COL_KW, COL_NAME, COL_ID, COL_PRICE, COL_META_DESC;
 let generating = false, stopGen = false;
 let pendingTargets = [];
+let lastMode = 'keywords';
 let currentMode = 'keywords';
 const PAGE_SIZE = 50;
 let currentPage = 0;
@@ -506,7 +507,7 @@ function processCSV(text) {
         keywords: cols[COL_KW] || '',
         aiGeneratedKw: false,
         aiGeneratedDesc: false,
-        cols: cols   // stored parsed array — never re-parse raw line on export
+        cols: cols
       });
     }
   }
@@ -723,7 +724,7 @@ function showBanner(remaining, filled, total) {
 function hideBanner() { document.getElementById('resumeBanner').classList.add('hidden'); }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PROMPTS
+// PROMPTS — FIXED: proper sentence structure, no keyword dumping
 // ─────────────────────────────────────────────────────────────────────────────
 function buildKwPrompt(products, kwN) {
   const list = products.map((p,i) => {
@@ -737,21 +738,23 @@ function buildKwPrompt(products, kwN) {
 }
 
 function buildDescPrompt(products, lengthTarget) {
-  const charTarget = lengthTarget === 'short' ? '160–220' : '280–350';
+  const charMin = lengthTarget === 'short' ? '160' : '280';
+  const charMax = lengthTarget === 'short' ? '220' : '350';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
     return (i+1) + '. "' + p.name + '" | ' + karat + ' ' + tone + (diamond ? ' | natural diamonds' : '') + ' | $' + p.price;
   }).join('\n');
-  return 'You are a senior SEO specialist writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nSTRUCTURE — two zones:\nZone 1 (first ~160 chars, shown by Google): product type + metal karat + brand + behavioral hook. No filler. Keyword-first.\nZone 2 (chars 161–' + charTarget.split('–')[1] + ', indexed only): long-tail variants, metal color alternatives, use occasions, collection cross-links.\n\nRULES:\n- Total length: exactly ' + charTarget + ' characters\n- Lead with the searchable product noun (e.g. "Pavé diamond hoop earrings in 18K white gold")\n- Include "Bony Levy" and collection name\n- Use behavioral intent phrases: "made to layer", "build a stack", "everyday wear", "wear alone or stack"\n- Include all metal color variants in Zone 2 when relevant (yellow, white, rose gold)\n- No exclamation marks. No "free shipping". No "handcrafted elegance". No discount language.\n- Natural luxury tone — writes like a human, not a keyword list\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["description 1", "description 2", ...]';
+  return 'You are a senior SEO copywriter writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nCRITICAL WRITING RULES — these are non-negotiable:\n1. Write in PROPER ENGLISH SENTENCES with correct capitalization and punctuation.\n2. NEVER write as a keyword string or run-on list. Every sentence must have a subject, verb, and end with a period.\n3. Zone 1 (first ~160 chars): ONE complete sentence. Lead with the product noun + metal karat + brand. End with a behavioral hook.\n4. Zone 2 (chars 161–' + charMax + '): ONE to TWO complete sentences. Add long-tail variants: metal color alternatives, use occasions, collection cross-links.\n5. Total length: ' + charMin + '–' + charMax + ' characters. If under ' + charMin + ', expand Zone 2 with more detail.\n6. Do NOT repeat the product name verbatim twice in one description.\n7. Use behavioral phrases naturally in a sentence: "made to layer", "build a stack", "everyday wear", "wear alone or stack".\n8. Include "Bony Levy" and collection name if identifiable.\n9. No exclamation marks. No "free shipping". No "handcrafted elegance". No "elevate your look".\n10. Natural luxury tone — sounds like a real human, not a keyword list.\n\nEXAMPLE of BAD output (never do this):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear with bony levy large hoop earrings in yellow gold or white gold for a classic look made to layer"\n\nEXAMPLE of GOOD output:\n"Large hoop earrings in 14K white gold by Bony Levy — lightweight, polished, and made to wear every day or layer with diamond studs. Shop the full Bony Levy earring collection in yellow, white, and rose gold; pairs perfectly with huggies and ear cuffs."\n\nProducts:\n' + list + '\n\nReturn ONLY a JSON array of strings, no markdown, no explanation. Exactly ' + products.length + ' items.';
 }
 
 function buildBothPrompt(products, kwN, lengthTarget) {
-  const charTarget = lengthTarget === 'short' ? '160–220' : '280–350';
+  const charMin = lengthTarget === 'short' ? '160' : '280';
+  const charMax = lengthTarget === 'short' ? '220' : '350';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
     return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond → ' + karat + ' ' + tone + ' + "natural diamonds"]' : '[no diamonds → ' + karat + ' ' + tone + ']');
   }).join('\n');
-  return 'You are a senior SEO specialist for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate BOTH meta keywords AND meta description for each product.\n\nKEYWORD RULES (' + kwN + ' keywords, semicolon-separated):\n- Include exact metal karat + tone\n- Diamond products: 18K gold + "natural diamonds"\n- Non-diamond: 14K gold\n- Always include "Bony Levy" and "fine jewelry"\n- Include jewelry type, collection name if present\n- Lowercase except brand names and metal labels\n\nDESCRIPTION RULES (senior SEO format, ' + charTarget + ' chars total):\nZone 1 (first ~160 chars): product type + metal karat + tone + brand + behavioral hook. Keyword-first. No filler.\nZone 2 (161–' + charTarget.split('–')[1] + ' chars): long-tail variants, metal color alternatives, use occasions, collection cross-links.\n- Lead with searchable product noun\n- Use behavioral phrases: "made to layer", "build a stack", "everyday wear"\n- Include all metal color variants in Zone 2 when relevant\n- No exclamation marks. No "free shipping". No "handcrafted elegance".\n- Natural luxury tone — not a keyword list\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
+  return 'You are a senior SEO copywriter for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate BOTH meta keywords AND meta description for each product.\n\nKEYWORD RULES (' + kwN + ' keywords, semicolon-separated):\n- Include exact metal karat + tone\n- Diamond products: 18K gold + "natural diamonds"\n- Non-diamond: 14K gold\n- Always include "Bony Levy" and "fine jewelry"\n- Include jewelry type, collection name if present\n- Lowercase except brand names and metal labels\n\nDESCRIPTION RULES — NON-NEGOTIABLE:\n1. Write in PROPER ENGLISH SENTENCES with correct capitalization and punctuation.\n2. NEVER write as a keyword string or run-on list.\n3. Zone 1 (first ~160 chars): ONE complete sentence — product noun + metal + brand + behavioral hook.\n4. Zone 2 (161–' + charMax + ' chars): ONE to TWO complete sentences — variants, occasions, collection links.\n5. Total: ' + charMin + '–' + charMax + ' characters. Expand Zone 2 if under ' + charMin + '.\n6. Do NOT repeat the product name verbatim twice.\n7. Use behavioral phrases naturally: "made to layer", "build a stack", "everyday wear".\n8. Include "Bony Levy" and collection name.\n9. No exclamation marks. No filler phrases. Natural luxury tone.\n\nBAD description example (never do this):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear with bony levy large hoop earrings in yellow gold for a classic look made to layer"\n\nGOOD description example:\n"Large hoop earrings in 14K white gold by Bony Levy — polished and lightweight, made to wear every day or layer with studs. Available in yellow, white, and rose gold; shop the full Bony Levy earrings collection."\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -789,6 +792,7 @@ async function waitWithCountdown(ms, label) {
 // ─────────────────────────────────────────────────────────────────────────────
 async function runGeneration(targets, mode, apiKey) {
   generating = true;
+  stopGen = false; // always reset at start of new run
   let wasUserStopped = false;
   hideBanner(); logReset();
 
@@ -867,6 +871,7 @@ async function runGeneration(targets, mode, apiKey) {
   if (wasUserStopped || stopGen) {
     stopGen = false;
     pendingTargets = mode === 'descriptions' ? allRows.filter(r => !r.metaDesc.trim()) : mode === 'both' ? allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim()) : allRows.filter(r => !r.keywords.trim());
+    lastMode = mode;
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('statusText').textContent = 'Stopped — ' + successCount.toLocaleString() + ' written this session. ' + pendingTargets.length.toLocaleString() + ' still need processing.';
@@ -904,6 +909,7 @@ async function startGeneration(mode) {
 
   if (!targets.length) { alert('No products need processing for this scope!'); return; }
   pendingTargets = [...targets];
+  lastMode = mode;
   await runGeneration(targets, mode, apiKey);
 }
 
@@ -911,14 +917,12 @@ async function continueGeneration() {
   if (generating) return;
   const apiKey = getApiKeyOrAlert(); if (!apiKey) return;
   if (!pendingTargets.length) { alert('Nothing left to process!'); return; }
-  const hasEmptyKw   = pendingTargets.some(r => !r.keywords.trim());
-  const hasEmptyDesc = pendingTargets.some(r => !r.metaDesc.trim());
-  const mode = hasEmptyKw && hasEmptyDesc ? 'both' : hasEmptyDesc ? 'descriptions' : 'keywords';
-  await runGeneration([...pendingTargets], mode, apiKey);
+  // Use stored lastMode instead of inferring from field state
+  await runGeneration([...pendingTargets], lastMode, apiKey);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GROQ API
+// GROQ API — fixed system prompt to enforce sentence writing
 // ─────────────────────────────────────────────────────────────────────────────
 async function callGroq(batch, mode, kwN, descLen, apiKey) {
   let prompt;
@@ -934,7 +938,7 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
       temperature: 0.25,
       max_tokens: 4000,
       messages: [
-        { role: 'system', content: 'You are a senior SEO specialist. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
+        { role: 'system', content: 'You are a senior SEO copywriter. Meta descriptions must be written as proper English sentences with capitalization and punctuation — never as keyword strings or run-on lists. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
         { role: 'user', content: prompt }
       ]
     })
@@ -964,7 +968,7 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CSV EXPORT — uses stored cols[], never re-parses raw lines
+// CSV EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
 function escCSV(v) { return '"' + String(v==null?'':v).replace(/"/g,'""') + '"'; }
 
@@ -1052,14 +1056,14 @@ function renderSampleItem(prod, res) {
     '<div class="sample-body">' +
     (kwString ? '<div class="sample-kw-label">Keywords (' + kws.length + ')</div><div class="sample-kw-list">' + tagsHtml + '</div><div class="sample-kw-raw">' + esc(kwString) + '</div>' : '') +
     (descString ? '<div class="sample-kw-label" style="margin-top:10px;">Meta description</div><div class="sample-kw-raw">' + esc(descString) + '</div><div class="char-count ' + descCls + '" style="margin-top:4px;">' + descHint + '</div>' : '') +
-    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule: 18K gold + natural diamonds | Senior SEO format' : 'Non-diamond rule: 14K gold | Senior SEO format') + '</div>' +
+    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule: 18K gold + natural diamonds | Proper sentence format' : 'Non-diamond rule: 14K gold | Proper sentence format') + '</div>' +
     '</div></div>';
 }
 
 function renderStaticSamples() {
   return [
-    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold gold earrings; luxury earrings; gold hoop earrings", description: "Large hoop earrings in 14K white gold by Bony Levy. Bold, lightweight, made to wear every day or stack with studs. Shop Bony Levy white gold hoops — available in small, medium, and large. Pairs with huggies, ear cuffs, and diamond styles from the full earrings collection." } },
-    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold diamond earrings", description: "Small pavé diamond hoop earrings in 18K white gold by Bony Levy. Natural diamonds, worn close to the ear. Shop Bony Levy diamond hoop earrings — also available in 18K yellow and rose gold. A timeless fine jewelry gift for anniversaries, engagements, or everyday luxury." } },
+    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold gold earrings; luxury earrings; gold hoop earrings", description: "Large hoop earrings in 14K white gold by Bony Levy — bold, lightweight, and made to wear every day or layer with diamond studs. Shop the full Bony Levy earring collection in yellow, white, and rose gold; pairs beautifully with huggies, ear cuffs, and pavé styles." } },
+    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold diamond earrings", description: "Small pavé diamond hoop earrings in 18K white gold with natural diamonds by Bony Levy — worn close to the ear, polished enough for everyday wear. Also available in 18K yellow and rose gold; a timeless fine jewelry gift for anniversaries, engagements, or daily luxury." } },
   ].map(d => renderSampleItem(d.prod, d.res)).join('');
 }
 </script>
