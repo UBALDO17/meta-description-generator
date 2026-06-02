@@ -4,113 +4,156 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bulk Meta Keywords Editor — Bony Levy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #ffffff; --bg2: #f7f7f5; --bg3: #eeede9;
-  --text: #1a1a18; --text2: #6b6b66; --text3: #9b9b95;
-  --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
-  --green: #2d7a3a; --green-bg: #eaf4ec;
-  --amber: #8a5c00; --amber-bg: #fef3d8;
-  --red: #b03030; --red-bg: #fdeaea;
-  --blue: #1a5fa8; --blue-bg: #e8f2fc;
-  --radius: 8px; --radius-lg: 12px;
-  --font: -apple-system, 'Segoe UI', sans-serif;
+  --gold: #b8933f; --gold-light: #d4ab5a; --gold-pale: #f7f0e3; --gold-border: rgba(184,147,63,0.25);
+  --bg: #fdfbf7; --bg2: #f5f0e8; --bg3: #ede6d8; --text: #1c1810; --text2: #6b5f4a; --text3: #a89880;
+  --border: rgba(0,0,0,0.09); --border2: rgba(0,0,0,0.15);
+  --green: #2d6a3a; --green-bg: #eaf3ec; --amber: #8a5c00; --amber-bg: #fdf0d0;
+  --red: #a02828; --red-bg: #fdeaea; --blue: #1a4d7a; --blue-bg: #e6eff8;
+  --radius: 8px; --radius-lg: 14px; --font: 'DM Sans', sans-serif; --font-display: 'Cormorant Garamond', serif;
 }
-body { font-family: var(--font); background: var(--bg2); color: var(--text); font-size: 14px; min-height: 100vh; }
-header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-header h1 { font-size: 15px; font-weight: 600; }
-.header-sub { font-size: 12px; color: var(--text2); }
-.container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-.upload-card { background: var(--bg); border: 1.5px dashed var(--border2); border-radius: var(--radius-lg); padding: 3.5rem; text-align: center; cursor: pointer; transition: background 0.15s; }
-.upload-card:hover { background: var(--bg3); }
-.upload-card .icon { font-size: 36px; display: block; margin-bottom: 12px; }
-.upload-card h2 { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+header {
+  background: var(--text); padding: 0 2.5rem; height: 62px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: baseline; gap: 14px; }
+.header-brand h1 { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: #fff; letter-spacing: 0.04em; }
+.header-sub { font-size: 11px; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; }
+.gold-pill { font-size: 11px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #fff; border-radius: 99px; padding: 3px 10px; font-weight: 500; letter-spacing: 0.03em; }
+.container { max-width: 1260px; margin: 0 auto; padding: 2.5rem 2rem; }
+.upload-card {
+  background: var(--bg); border: 1.5px dashed var(--gold-border); border-radius: var(--radius-lg);
+  padding: 4rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+}
+.upload-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(184,147,63,0.06) 0%, transparent 70%); pointer-events: none; }
+.upload-card:hover { background: var(--gold-pale); border-color: var(--gold); }
+.upload-card .icon { font-size: 40px; display: block; margin-bottom: 14px; }
+.upload-card h2 { font-family: var(--font-display); font-size: 22px; font-weight: 500; margin-bottom: 8px; }
 .upload-card p { font-size: 13px; color: var(--text2); }
 #fileInput { display: none; }
-
-/* API key setup */
-.setup-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
-.setup-card h2 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.setup-card { background: var(--bg); border: 1px solid var(--gold-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+.setup-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold)); }
+.setup-card h2 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .setup-card p { font-size: 13px; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
 .api-row { display: flex; gap: 10px; align-items: center; }
-.api-row input { flex: 1; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; letter-spacing: 0.05em; }
-.api-row input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
+.api-row input { flex: 1; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg2); color: var(--text); outline: none; letter-spacing: 0.06em; }
+.api-row input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,147,63,0.12); }
 .api-saved { font-size: 12px; color: var(--green); margin-top: 6px; display: none; }
-
 .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 1.5rem; }
 .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-.stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.stat-value { font-size: 24px; font-weight: 600; }
-.v-green { color: var(--green); } .v-red { color: var(--red); } .v-blue { color: var(--blue); }
+.stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+.stat-value { font-family: var(--font-display); font-size: 30px; font-weight: 500; }
+.v-green { color: var(--green); } .v-red { color: var(--red); } .v-gold { color: var(--gold); }
 .panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.5rem; overflow: hidden; }
-.panel-hdr { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.panel-hdr { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--bg2); }
 .panel-hdr h3 { font-size: 13px; font-weight: 600; }
-.panel-body { padding: 16px; }
-.brand-note { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; color: var(--text2); margin-bottom: 14px; line-height: 1.6; }
+.panel-body { padding: 18px; }
+.rules-card { background: linear-gradient(135deg, var(--gold-pale) 0%, #fff8ec 100%); border: 1px solid var(--gold-border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; }
+.rules-card h4 { font-size: 12px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.rules-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.rule-item { font-size: 12px; color: var(--text2); display: flex; align-items: flex-start; gap: 6px; line-height: 1.5; }
+.rule-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 5px; }
+.brand-note { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; color: var(--text2); margin-bottom: 14px; line-height: 1.7; }
 .brand-note strong { color: var(--text); }
-.ai-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end; }
+.ai-row { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 10px; align-items: end; }
 .field-grp { display: flex; flex-direction: column; gap: 4px; }
-.field-grp label { font-size: 12px; color: var(--text2); font-weight: 500; }
-.field-grp select, .field-grp input { font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
-.field-grp select:focus, .field-grp input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
-.btn { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--bg); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 0.1s; }
+.field-grp label { font-size: 12px; color: var(--text2); font-weight: 500; letter-spacing: 0.02em; }
+.field-grp select, .field-grp input { font-family: var(--font); font-size: 13px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg2); color: var(--text); outline: none; }
+.field-grp select:focus, .field-grp input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,147,63,0.1); }
+.btn { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--bg); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: all 0.15s; }
 .btn:hover { background: var(--bg2); }
-.btn-dark { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.btn-dark { background: var(--text); color: #fff; border-color: var(--text); }
 .btn-dark:hover { background: #333; }
 .btn-dark:disabled { background: var(--bg3); color: var(--text3); border-color: var(--border); cursor: not-allowed; }
+.btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #fff; border: none; }
+.btn-gold:hover { background: linear-gradient(135deg, #a07a30, var(--gold)); }
 .btn-green { background: var(--green); color: #fff; border-color: var(--green); }
-.btn-green:hover { background: #236130; }
-.btn-blue { background: var(--blue); color: #fff; border-color: var(--blue); }
-.btn-blue:hover { background: #154d8a; }
+.btn-green:hover { background: #235830; }
+.btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
+.btn-amber:hover { background: #6a4500; }
 .prog-wrap { margin-top: 14px; }
 .status-msg { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 8px; }
 .status-blue { background: var(--blue-bg); color: var(--blue); }
 .status-green { background: var(--green-bg); color: var(--green); }
 .status-amber { background: var(--amber-bg); color: var(--amber); }
 .status-red { background: var(--red-bg); color: var(--red); }
-.prog-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.3s; }
-.prog-label { font-size: 12px; color: var(--text2); margin-top: 5px; }
+.prog-bar { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 2px; transition: width 0.3s; }
+.prog-label { font-size: 12px; color: var(--text3); margin-top: 5px; }
 .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
-.toolbar input[type=text] { flex: 1; min-width: 180px; font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
-.toolbar input[type=text]:focus { border-color: var(--blue); }
-.toolbar select { font-family: var(--font); font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
+.toolbar input[type=text] { flex: 1; min-width: 180px; font-family: var(--font); font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none; }
+.toolbar input[type=text]:focus { border-color: var(--gold); }
+.toolbar select { font-family: var(--font); font-size: 13px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
 .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: auto; max-height: 520px; }
-table { width: 100%; border-collapse: collapse; min-width: 680px; }
-thead th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text2); padding: 9px 12px; background: var(--bg2); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 2; }
-th:nth-child(1){width:44px;} th:nth-child(2){width:30%;} th:nth-child(3){width:56%;} th:nth-child(4){width:70px;}
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
+thead th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); padding: 10px 14px; background: var(--bg2); border-bottom: 1px solid var(--border); text-align: left; position: sticky; top: 0; z-index: 2; }
+th:nth-child(1){width:44px;} th:nth-child(2){width:30%;} th:nth-child(3){width:56%;} th:nth-child(4){width:80px;}
 tbody tr { border-bottom: 1px solid var(--border); }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #fafaf8; }
-tbody td { padding: 8px 12px; vertical-align: top; }
+tbody tr:hover { background: var(--gold-pale); }
+tbody td { padding: 9px 14px; vertical-align: top; }
 .prod-name { font-size: 13px; font-weight: 500; line-height: 1.4; }
-.prod-price { font-size: 11px; color: var(--text2); margin-top: 2px; }
-.kw-input { width: 100%; font-family: var(--font); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; resize: vertical; min-height: 50px; background: var(--bg); color: var(--text); line-height: 1.5; outline: none; }
-.kw-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(26,95,168,0.1); }
+.prod-price { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.kw-input { width: 100%; font-family: var(--font); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; resize: vertical; min-height: 52px; background: var(--bg); color: var(--text); line-height: 1.6; outline: none; }
+.kw-input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(184,147,63,0.12); }
 .kw-meta { font-size: 11px; color: var(--text3); margin-top: 3px; }
-.tag-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
-.tag { font-size: 11px; background: var(--bg3); color: var(--text2); padding: 2px 7px; border-radius: 99px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+.tag { font-size: 11px; background: var(--bg3); color: var(--text2); padding: 2px 8px; border-radius: 99px; }
+.tag-diamond { background: #e8f2fc; color: var(--blue); }
+.tag-gold { background: var(--gold-pale); color: var(--gold); }
 .badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; }
 .badge-ok { background: var(--green-bg); color: var(--green); }
 .badge-empty { background: var(--red-bg); color: var(--red); }
-.badge-ai { background: var(--blue-bg); color: var(--blue); }
-.spinner { width: 14px; height: 14px; border: 2px solid rgba(26,95,168,0.25); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+.badge-ai { background: var(--gold-pale); color: var(--gold); }
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(184,147,63,0.25); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .action-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
 .note { font-size: 12px; color: var(--text2); }
 .hidden { display: none !important; }
-.gemini-badge { font-size: 11px; background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; border-radius: 99px; padding: 2px 8px; font-weight: 500; }
+/* Resume banner */
+.resume-banner {
+  background: var(--amber-bg); border: 1px solid rgba(138,92,0,0.25); border-radius: var(--radius);
+  padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.resume-banner-text { font-size: 13px; color: var(--amber); line-height: 1.5; }
+.resume-banner-text strong { font-weight: 600; }
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(3px); }
+.modal { background: var(--bg); border-radius: var(--radius-lg); width: 100%; max-width: 760px; max-height: 80vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.2); }
+.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 2; }
+.modal-header h2 { font-family: var(--font-display); font-size: 22px; font-weight: 500; }
+.modal-close { background: none; border: 1px solid var(--border2); border-radius: var(--radius); padding: 5px 10px; cursor: pointer; font-size: 13px; color: var(--text2); }
+.modal-body { padding: 20px 24px; }
+.sample-loading { display: flex; align-items: center; gap: 12px; padding: 2rem; color: var(--text2); font-size: 13px; justify-content: center; }
+.sample-item { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.sample-item:last-child { margin-bottom: 0; }
+.sample-prod-hdr { background: var(--bg2); padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.sample-prod-name { font-weight: 600; font-size: 13px; }
+.sample-prod-price { font-size: 12px; color: var(--text3); }
+.sample-body { padding: 14px; }
+.sample-kw-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text3); margin-bottom: 6px; }
+.sample-kw-list { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.sample-kw-tag { font-size: 12px; background: var(--bg3); color: var(--text2); padding: 3px 10px; border-radius: 99px; }
+.sample-kw-tag.is-diamond { background: #e8f2fc; color: var(--blue); }
+.sample-kw-tag.is-brand { background: var(--gold-pale); color: var(--gold); border: 1px solid var(--gold-border); }
+.sample-kw-raw { font-size: 11px; color: var(--text3); background: var(--bg2); padding: 8px 10px; border-radius: 6px; font-family: monospace; line-height: 1.5; word-break: break-word; }
+.sample-rule-note { font-size: 11px; color: var(--green); background: var(--green-bg); padding: 6px 10px; border-radius: 6px; margin-top: 8px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.5; }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <div style="font-size:15px;font-weight:600;">Bulk Meta Keywords Editor</div>
-    <div class="header-sub">bonylevy.com — BigCommerce &nbsp;·&nbsp; <span class="gemini-badge">✦ Gemini 2.0 Flash</span></div>
+  <div class="header-brand">
+    <h1>Bony Levy — Bulk Meta Keywords</h1>
+    <span class="header-sub">BigCommerce SEO Tool</span>
   </div>
-  <div style="display:flex;gap:8px;">
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span class="gold-pill">✦ Gemini 2.0 Flash</span>
+    <button class="btn" onclick="openSampleModal()" style="background:var(--bg2);color:var(--text);border-color:var(--border2);">📋 Preview samples</button>
     <button class="btn" id="btnReset" onclick="resetApp()" style="display:none;">↩ New CSV</button>
     <button class="btn btn-green" id="btnDownload" onclick="downloadCSV()" style="display:none;">⬇ Download CSV</button>
   </div>
@@ -118,13 +161,12 @@ tbody td { padding: 8px 12px; vertical-align: top; }
 
 <div class="container">
 
-  <!-- API Key setup (always visible at top) -->
   <div class="setup-card" id="setupCard">
     <h2>🔑 Gemini API Key</h2>
-    <p>Get a <strong>free</strong> API key at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com</a> — no billing required. The key is stored only in your browser (sessionStorage) and never sent anywhere except Google's API.</p>
+    <p>Get a <strong>free</strong> key at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold);">aistudio.google.com</a> — no billing required. Stored only in your browser session, never shared.</p>
     <div class="api-row">
       <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off" oninput="onApiKeyInput()" />
-      <button class="btn btn-blue" onclick="saveApiKey()">Save key</button>
+      <button class="btn btn-gold" onclick="saveApiKey()">Save key</button>
     </div>
     <div class="api-saved" id="apiSaved">✓ Key saved for this session</div>
   </div>
@@ -142,14 +184,28 @@ tbody td { padding: 8px 12px; vertical-align: top; }
 
     <div class="stats-grid" id="statsGrid"></div>
 
-    <div class="panel">
-      <div class="panel-hdr">
-        <span>✦</span>
-        <h3>AI keyword generator — brand-aware &nbsp;<span class="gemini-badge">Gemini 2.0 Flash (free tier)</span></h3>
+    <!-- Resume banner (shown when stopped mid-way) -->
+    <div class="resume-banner hidden" id="resumeBanner">
+      <div class="resume-banner-text">
+        ⚠️ <strong>Generation was stopped.</strong> <span id="resumeText"></span> You can continue from where you left off, or generate all again.
       </div>
+      <button class="btn btn-amber" onclick="continueGeneration()">▶ Continue from where I stopped</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hdr"><span>✦</span><h3>AI keyword generator — brand-aware with metal &amp; diamond rules</h3></div>
       <div class="panel-body">
+        <div class="rules-card">
+          <h4>Active keyword rules</h4>
+          <div class="rules-list">
+            <div class="rule-item"><span class="rule-dot"></span><span><strong>Diamond styles</strong> → always <strong>18K gold</strong> + <strong>"natural diamonds"</strong></span></div>
+            <div class="rule-item"><span class="rule-dot"></span><span><strong>Non-diamond styles</strong> → always <strong>14K gold</strong> (unless name specifies otherwise)</span></div>
+            <div class="rule-item"><span class="rule-dot"></span><span>Gold tone follows product name: yellow, white, or rose gold</span></div>
+            <div class="rule-item"><span class="rule-dot"></span><span>Always include <strong>Bony Levy</strong>, <strong>fine jewelry</strong>, jewelry type &amp; collection</span></div>
+          </div>
+        </div>
         <div class="brand-note">
-          <strong>Brand context loaded:</strong> Bony Levy® — award-winning fine jewelry designer based in Los Angeles. Handcrafted in <strong>14K &amp; 18K yellow gold, white gold, and rose gold</strong>. Collections include Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Categories: earrings (hoop, huggie, stud, drop, diamond, gemstone), necklaces (chain, pendant, diamond, tennis, Y-necklace), rings (stackable, band, crossover, statement, diamond, engagement), bracelets (bangle, chain, tennis, diamond). Keywords will match your existing <code>keyword1; keyword2; keyword3</code> semicolon format.
+          <strong>Brand context:</strong> Bony Levy® — award-winning fine jewelry, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Categories: earrings, necklaces, rings, bracelets. Format: <code>keyword1; keyword2; keyword3</code>
         </div>
         <div class="ai-row">
           <div class="field-grp">
@@ -167,6 +223,7 @@ tbody td { padding: 8px 12px; vertical-align: top; }
               <option value="10">10 keywords</option>
             </select>
           </div>
+          <button class="btn" onclick="openSampleModal()" style="align-self:end;">📋 Preview samples</button>
           <button class="btn btn-dark" id="btnGenerate" onclick="startGeneration()">✦ Generate with AI</button>
         </div>
         <div id="progSection" class="hidden prog-wrap">
@@ -188,7 +245,7 @@ tbody td { padding: 8px 12px; vertical-align: top; }
         <option value="filled">Has keywords</option>
         <option value="ai">AI generated</option>
       </select>
-      <span id="resultCount" style="font-size:12px;color:var(--text2);white-space:nowrap;"></span>
+      <span id="resultCount" style="font-size:12px;color:var(--text3);white-space:nowrap;"></span>
     </div>
 
     <div class="table-wrap">
@@ -210,38 +267,54 @@ tbody td { padding: 8px 12px; vertical-align: top; }
       <span class="note" id="downloadNote"></span>
     </div>
   </div>
+</div>
 
+<!-- Sample Modal -->
+<div class="modal-overlay hidden" id="sampleModal" onclick="closeSampleModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Sample keyword preview</h2>
+      <button class="modal-close" onclick="closeSampleModal()">✕ Close</button>
+    </div>
+    <div class="modal-body" id="sampleBody"></div>
+  </div>
 </div>
 
 <script>
 let allRows = [], headers = [], originalLines = [];
 let COL_KW, COL_NAME, COL_ID, COL_PRICE, COL_META_DESC;
 let generating = false, stopGen = false;
+// Track the next index to process for "continue" support
+let pendingTargets = []; // indices into allRows still needing keywords
+let lastKwCount = '8';
 
-// ── API Key management ──────────────────────────────────────────────────────
+// ── API Key ──────────────────────────────────────────────────────────────────
 function getApiKey() { return sessionStorage.getItem('gemini_api_key') || ''; }
-
-function onApiKeyInput() {
-  document.getElementById('apiSaved').style.display = 'none';
-}
-
+function onApiKeyInput() { document.getElementById('apiSaved').style.display = 'none'; }
 function saveApiKey() {
   const k = document.getElementById('apiKeyInput').value.trim();
   if (!k) { alert('Please paste your Gemini API key first.'); return; }
   sessionStorage.setItem('gemini_api_key', k);
   document.getElementById('apiSaved').style.display = 'block';
 }
-
-// Pre-fill if already saved
 window.addEventListener('DOMContentLoaded', () => {
   const saved = getApiKey();
-  if (saved) {
-    document.getElementById('apiKeyInput').value = saved;
-    document.getElementById('apiSaved').style.display = 'block';
-  }
+  if (saved) { document.getElementById('apiKeyInput').value = saved; document.getElementById('apiSaved').style.display = 'block'; }
 });
 
-// ── CSV parsing ─────────────────────────────────────────────────────────────
+function hasDiamond(name) { return /diamond|pave|pavé|brilliant|solitaire|cz|cubic zirconia/i.test(name); }
+function getMetalKarat(name) {
+  const explicit = name.match(/(\d{2})[Kk]/);
+  if (explicit) return explicit[1] + 'K';
+  return hasDiamond(name) ? '18K' : '14K';
+}
+function getGoldTone(name) {
+  if (/rose\s*gold|pink\s*gold/i.test(name)) return 'rose gold';
+  if (/white\s*gold/i.test(name)) return 'white gold';
+  return 'yellow gold';
+}
+
+// ── CSV parsing ──────────────────────────────────────────────────────────────
 function parseCSVLine(line) {
   const res = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
@@ -274,18 +347,19 @@ function processCSV(text) {
     if (!originalLines[i].trim()) continue;
     const cols = parseCSVLine(originalLines[i]);
     if (cols[0] === 'Product') {
-      allRows.push({ lineIndex:i, id:cols[COL_ID]||'', name:cols[COL_NAME]||'', price:cols[COL_PRICE]||'', metaDesc:cols[COL_META_DESC]||'', keywords:cols[COL_KW]||'', aiGenerated:false, cols });
+      allRows.push({ lineIndex: i, id: cols[COL_ID]||'', name: cols[COL_NAME]||'', price: cols[COL_PRICE]||'', metaDesc: cols[COL_META_DESC]||'', keywords: cols[COL_KW]||'', aiGenerated: false, cols });
     }
   }
 
+  pendingTargets = [];
   const emptyCount = allRows.filter(r=>!r.keywords.trim()).length;
   document.getElementById('applyScope').options[0].text = `Empty keywords only (${emptyCount.toLocaleString()})`;
   document.getElementById('applyScope').options[1].text = `All ${allRows.length.toLocaleString()} products (overwrite)`;
-
   document.getElementById('uploadSection').classList.add('hidden');
   document.getElementById('editorSection').classList.remove('hidden');
   document.getElementById('btnReset').style.display='';
   document.getElementById('btnDownload').style.display='';
+  hideBanner();
   updateStats(); renderTable();
 }
 
@@ -295,7 +369,7 @@ function updateStats() {
     <div class="stat-card"><div class="stat-label">Total products</div><div class="stat-value">${total.toLocaleString()}</div></div>
     <div class="stat-card"><div class="stat-label">Has keywords</div><div class="stat-value v-green">${filled.toLocaleString()}</div></div>
     <div class="stat-card"><div class="stat-label">Missing</div><div class="stat-value v-red">${empty.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-blue">${ai.toLocaleString()}</div></div>`;
+    <div class="stat-card"><div class="stat-label">AI generated</div><div class="stat-value v-gold">${ai.toLocaleString()}</div></div>`;
 }
 
 function getFiltered() {
@@ -317,9 +391,12 @@ function renderTable() {
     const idx=allRows.indexOf(r);
     const kws=r.keywords.trim()?r.keywords.split(';').map(k=>k.trim()).filter(Boolean):[];
     const badge=r.keywords.trim()?(r.aiGenerated?'<span class="badge badge-ai">✦ AI</span>':'<span class="badge badge-ok">✓ set</span>'):'<span class="badge badge-empty">empty</span>';
-    const tags=kws.length?`<div class="tag-row">${kws.slice(0,6).map(k=>`<span class="tag">${esc(k)}</span>`).join('')}${kws.length>6?`<span class="tag">+${kws.length-6}</span>`:''}</div>`:'';
+    const tags=kws.length?`<div class="tag-row">${kws.slice(0,6).map(k=>{
+      const cls=/natural diamond|diamond/i.test(k)?' tag-diamond':(/18K|14K|gold/i.test(k)?' tag-gold':'');
+      return `<span class="tag${cls}">${esc(k)}</span>`;
+    }).join('')}${kws.length>6?`<span class="tag">+${kws.length-6}</span>`:''}</div>`:'';
     return `<tr>
-      <td style="color:var(--text3);font-size:12px;padding-top:10px;">${idx+1}</td>
+      <td style="color:var(--text3);font-size:12px;padding-top:12px;">${idx+1}</td>
       <td><div class="prod-name">${esc(r.name)}</div><div class="prod-price">$${parseFloat(r.price||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
       <td>
         <textarea class="kw-input" data-idx="${idx}" oninput="updateKw(${idx},this.value)">${esc(r.keywords)}</textarea>
@@ -329,139 +406,240 @@ function renderTable() {
       <td style="text-align:center;padding-top:12px;">${badge}</td>
     </tr>`;
   }).join('');
-  if(rows.length>300) tbody.innerHTML+=`<tr><td colspan="4" style="text-align:center;padding:10px;font-size:12px;color:var(--text2);">Showing 300 of ${rows.length} — filter to see more.</td></tr>`;
+  if(rows.length>300) tbody.innerHTML+=`<tr><td colspan="4" style="text-align:center;padding:10px;font-size:12px;color:var(--text3);">Showing 300 of ${rows.length} — filter to see more.</td></tr>`;
 }
 
 function updateKw(idx,val){allRows[idx].keywords=val;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ── Generation ──────────────────────────────────────────────────────────────
-async function startGeneration(){
-  if(generating){stopGen=true;return;}
-
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    alert('Please enter and save your Gemini API key first (at the top of the page).');
-    document.getElementById('apiKeyInput').focus();
-    return;
-  }
-
-  const scope=document.getElementById('applyScope').value;
-  const kwN=document.getElementById('kwCount').value;
-  const targets=scope==='all'?[...allRows]:allRows.filter(r=>!r.keywords.trim());
-  if(!targets.length){alert('No products need keywords!');return;}
-
-  generating=true; stopGen=false;
-  document.getElementById('btnGenerate').textContent='⏹ Stop';
-  document.getElementById('progSection').classList.remove('hidden');
-  document.getElementById('statusMsg').className='status-msg status-blue';
-  document.getElementById('spinner').style.display='';
-
-  // Gemini free tier: 15 RPM, so smaller batches + delay
-  let done=0; const total=targets.length; const BATCH=10;
-
-  for(let i=0;i<targets.length;i+=BATCH){
-    if(stopGen) break;
-    const batch=targets.slice(i,i+BATCH);
-    document.getElementById('statusText').textContent=`Generating keywords for products ${i+1}–${Math.min(i+BATCH,total)} of ${total}...`;
-    document.getElementById('progLabel').textContent=`${done} / ${total}`;
-    document.getElementById('progFill').style.width=(done/total*100)+'%';
-
-    try {
-      const results=await genBatch(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
-      results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
-      done+=batch.length;
-    } catch(e){
-      console.error(e);
-      const msg=document.getElementById('statusMsg');
-      msg.className='status-msg status-amber';
-      document.getElementById('statusText').textContent=`Error: ${e.message} — waiting 10s before retry...`;
-      await sleep(10000);
-      // retry same batch once
-      try {
-        const results=await genBatch(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
-        results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
-        done+=batch.length;
-        document.getElementById('statusMsg').className='status-msg status-blue';
-      } catch(e2) {
-        console.error('Retry failed', e2);
-        document.getElementById('statusText').textContent=`Skipping batch after retry failure. Continuing...`;
-        done+=batch.length;
-      }
-    }
-
-    updateStats();
-    if(i%(BATCH*2)===0) renderTable();
-
-    // Rate-limit pause between batches (free tier: 15 req/min)
-    if(i+BATCH < targets.length && !stopGen) await sleep(4500);
-  }
-
-  document.getElementById('progFill').style.width='100%';
-  document.getElementById('progLabel').textContent=`${done} / ${total}`;
-  const msg=document.getElementById('statusMsg');
-  msg.className='status-msg status-green';
-  document.getElementById('spinner').style.display='none';
-  document.getElementById('statusText').textContent=stopGen?`Stopped — ${done} products updated.`:`Done! ${done} products now have keywords.`;
-  generating=false; stopGen=false;
-  document.getElementById('btnGenerate').innerHTML='✦ Generate with AI';
-  updateStats(); renderTable();
+// ── Resume banner ─────────────────────────────────────────────────────────────
+function showBanner(remaining, done, total) {
+  const banner = document.getElementById('resumeBanner');
+  document.getElementById('resumeText').textContent =
+    `${done.toLocaleString()} of ${total.toLocaleString()} products were processed. ${remaining.toLocaleString()} still need keywords.`;
+  banner.classList.remove('hidden');
+}
+function hideBanner() {
+  document.getElementById('resumeBanner').classList.add('hidden');
 }
 
-async function genBatch(products, kwN, apiKey){
-  const productList = products.map((p,i)=>`${i+1}. Product name: "${p.name}"${p.meta?`\n   Meta description: "${p.meta.slice(0,120)}"`:''}`).join('\n');
+// ── Build prompt ──────────────────────────────────────────────────────────────
+function buildPrompt(products, kwN) {
+  const productList = products.map((p,i)=>{
+    const diamond=hasDiamond(p.name), karat=getMetalKarat(p.name), tone=getGoldTone(p.name);
+    const rule=diamond?`[RULE: contains diamonds → MUST use "${karat} ${tone}" and include "natural diamonds"]`:`[RULE: no diamonds → MUST use "${karat} ${tone}"]`;
+    return `${i+1}. Product name: "${p.name}"${p.meta?`\n   Meta: "${p.meta.slice(0,120)}"`:''}\n   ${rule}`;
+  }).join('\n\n');
+  return `You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand based in Los Angeles. Collections include Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Categories: earrings, necklaces, rings, bracelets.
 
-  const prompt=`You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand based in Los Angeles. Bony Levy designs handcrafted jewelry in 14K and 18K yellow gold, white gold, and rose gold. Collections include Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby. Product categories: earrings (hoop, huggie, stud, drop, diamond, gemstone), necklaces (chain, pendant, diamond, tennis, Y-necklace), rings (stackable, band, crossover, statement, diamond, engagement), bracelets (bangle, chain, tennis, diamond).
+CRITICAL METAL & DIAMOND RULES:
+1. Diamond products (name has "diamond","pave","pavé","brilliant","solitaire"): use 18K gold + always include "natural diamonds".
+2. Non-diamond products: use 14K gold (unless name says otherwise).
+3. Gold tone from product name: yellow, white, or rose gold. Default yellow.
+4. NEVER mix 14K with diamond products or 18K with non-diamond products.
 
-For each product below, generate exactly ${kwN} precise, relevant SEO meta keywords.
-
-Rules:
-- Always include the exact metal (e.g. "14K yellow gold" or "18K white gold")
-- Always include the jewelry type/category (e.g. "hoop earrings", "pendant necklace", "stackable ring")
-- Include the specific style/design from the name (e.g. "huggie", "pave diamond", "tennis bracelet", "bar pendant")
-- Include the collection name if present (Audrey, Mika, Bardot, Maya, Varda, Kiera, El Mar, Gatsby, etc.)
+Generate exactly ${kwN} precise SEO meta keywords per product. Rules:
+- Include exact metal karat + tone per product rule
+- Include jewelry type/category
+- Include style/design from name
+- Include collection name if present
 - Always include "Bony Levy" and "fine jewelry"
-- Add relevant search terms a buyer would use
-- Use semicolons to separate (no commas, no newlines, no bullet points)
-- Each keyword: 1–4 words, lowercase except brand names and metal types
-- Return ONLY a valid JSON array of strings, one string per product, no markdown, no explanation
+- For diamond products, always include "natural diamonds"
+- Semicolons only, no commas/newlines/bullets
+- Each keyword 1–4 words, lowercase except brand names and metal labels
+- Return ONLY valid JSON array, no markdown, no explanation
 
 Products:
 ${productList}
 
-Return format (${products.length} items): ["kw1; kw2; kw3; ...", "kw1; kw2; ...", ...]`;
+Return (${products.length} items): ["kw1; kw2; ...", ...]`;
+}
 
+// ── Generation core ────────────────────────────────────────────────────────────
+async function runGeneration(targets, kwN, apiKey) {
+  generating = true; stopGen = false;
+  hideBanner();
+  document.getElementById('btnGenerate').textContent = '⏹ Stop';
+  document.getElementById('progSection').classList.remove('hidden');
+  document.getElementById('statusMsg').className = 'status-msg status-blue';
+  document.getElementById('spinner').style.display = '';
+
+  const total = targets.length;
+  const overallTotal = allRows.length;
+  let done = 0;
+  const BATCH = 10;
+
+  for (let i = 0; i < targets.length; i += BATCH) {
+    if (stopGen) break;
+    const batch = targets.slice(i, i + BATCH);
+    document.getElementById('statusText').textContent = `Generating ${i+1}–${Math.min(i+BATCH,total)} of ${total}…`;
+    const filled = allRows.filter(r=>r.keywords.trim()).length;
+    document.getElementById('progLabel').textContent = `${filled.toLocaleString()} / ${overallTotal.toLocaleString()} products have keywords`;
+    document.getElementById('progFill').style.width = (filled / overallTotal * 100) + '%';
+
+    try {
+      const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
+      results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+      // Remove processed from pendingTargets
+      batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
+      done += batch.length;
+    } catch(e) {
+      console.error(e);
+      document.getElementById('statusMsg').className = 'status-msg status-amber';
+      document.getElementById('statusText').textContent = `Error: ${e.message} — retrying in 10s…`;
+      await sleep(10000);
+      try {
+        const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
+        results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+        batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
+        done += batch.length;
+        document.getElementById('statusMsg').className = 'status-msg status-blue';
+      } catch(e2) {
+        console.error('Retry failed',e2);
+        done += batch.length;
+      }
+    }
+
+    updateStats();
+    if (i % (BATCH*2) === 0) renderTable();
+    if (i + BATCH < targets.length && !stopGen) await sleep(4500);
+  }
+
+  // Final state
+  generating = false;
+  document.getElementById('btnGenerate').innerHTML = '✦ Generate with AI';
+  const finalFilled = allRows.filter(r=>r.keywords.trim()).length;
+  document.getElementById('progFill').style.width = (finalFilled / overallTotal * 100) + '%';
+  document.getElementById('progLabel').textContent = `${finalFilled.toLocaleString()} / ${overallTotal.toLocaleString()} products have keywords`;
+
+  if (stopGen) {
+    stopGen = false;
+    // pendingTargets still holds the remaining ones
+    const remaining = pendingTargets.length;
+    document.getElementById('statusMsg').className = 'status-msg status-amber';
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('statusText').textContent = `Stopped — ${done.toLocaleString()} processed this session. ${remaining.toLocaleString()} remaining.`;
+    showBanner(remaining, finalFilled, overallTotal);
+  } else {
+    pendingTargets = [];
+    document.getElementById('statusMsg').className = 'status-msg status-green';
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('statusText').textContent = `Done! All ${finalFilled.toLocaleString()} products now have keywords.`;
+    hideBanner();
+  }
+
+  updateStats(); renderTable();
+}
+
+async function startGeneration() {
+  if (generating) { stopGen = true; return; }
+  const apiKey = getApiKey();
+  if (!apiKey) { alert('Please enter and save your Gemini API key first.'); document.getElementById('apiKeyInput').focus(); return; }
+  const scope = document.getElementById('applyScope').value;
+  lastKwCount = document.getElementById('kwCount').value;
+  const targets = scope === 'all' ? [...allRows] : allRows.filter(r=>!r.keywords.trim());
+  if (!targets.length) { alert('No products need keywords!'); return; }
+  pendingTargets = [...targets]; // track all of this run
+  await runGeneration(targets, lastKwCount, apiKey);
+}
+
+async function continueGeneration() {
+  if (generating) return;
+  const apiKey = getApiKey();
+  if (!apiKey) { alert('Please enter and save your Gemini API key first.'); return; }
+  if (!pendingTargets.length) {
+    // Fall back to all empty if no pending tracked
+    pendingTargets = allRows.filter(r=>!r.keywords.trim());
+  }
+  if (!pendingTargets.length) { alert('No products remaining — all have keywords!'); return; }
+  const kwN = document.getElementById('kwCount').value;
+  await runGeneration([...pendingTargets], kwN, apiKey);
+}
+
+async function callGemini(products, kwN, apiKey) {
+  const prompt = buildPrompt(products, kwN);
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 2048 }
-    })
+    body: JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.2,maxOutputTokens:2048} })
   });
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(()=>({}));
-    throw new Error(err?.error?.message || `HTTP ${resp.status}`);
-  }
-
+  if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err?.error?.message || `HTTP ${resp.status}`); }
   const data = await resp.json();
   const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  const clean = raw.replace(/```json|```/g, '').trim();
+  const clean = raw.replace(/```json|```/g,'').trim();
   return JSON.parse(clean);
 }
 
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ── CSV export ──────────────────────────────────────────────────────────────
-function escCSV(v){
-  const s=String(v==null?'':v);
-  return (s.includes(',')||s.includes('"')||s.includes('\n')||s.includes('\r'))?'"'+s.replace(/"/g,'""')+'"':s;
+// ── Sample Modal — REAL products from the CSV ─────────────────────────────────
+// These are actual products from the uploaded Bony Levy CSV
+const SAMPLE_PRODUCTS = [
+  { name: "14K White Gold Bony Levy Large Hoop Earrings", price: "425.00", type: "plain" },
+  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings", price: "1,550.00", type: "diamond" },
+  { name: "14K Yellow Gold Bony Levy Natural Diamond Bar Pendant Necklace", price: "1,875.00", type: "diamond" },
+  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace", price: "635.00", type: "plain" },
+  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring", price: "995.00", type: "diamond" },
+];
+
+async function openSampleModal() {
+  const apiKey = getApiKey();
+  document.getElementById('sampleModal').classList.remove('hidden');
+  document.getElementById('sampleBody').innerHTML = `<div class="sample-loading"><div class="spinner"></div>Generating 5 sample keywords with AI…</div>`;
+  if (!apiKey) {
+    document.getElementById('sampleBody').innerHTML = `<div style="padding:1rem;font-size:13px;color:var(--text2);line-height:1.7;"><p style="margin-bottom:12px;">No API key saved yet. Here's what the output <em>will look like</em> once you add your key:</p>${renderStaticSamples()}</div>`;
+    return;
+  }
+  try {
+    const results = await callGemini(SAMPLE_PRODUCTS.map(p=>({name:p.name,meta:''})), '8', apiKey);
+    const html = SAMPLE_PRODUCTS.map((p,i)=>renderSampleItem(p,results[i]||'')).join('');
+    document.getElementById('sampleBody').innerHTML = html +
+      `<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Real AI-generated results using your Gemini key and actual Bony Levy products from your CSV.</p>`;
+  } catch(e) {
+    document.getElementById('sampleBody').innerHTML = `<div style="padding:1rem;color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
 }
 
-function downloadCSV(){
+function closeSampleModal(e) {
+  if (!e || e.target === document.getElementById('sampleModal')) {
+    document.getElementById('sampleModal').classList.add('hidden');
+  }
+}
+
+function renderSampleItem(prod, kwString) {
+  const kws = kwString.split(';').map(k=>k.trim()).filter(Boolean);
+  const isDiamond = prod.type === 'diamond';
+  const ruleNote = isDiamond ? `✓ Diamond rule: includes "natural diamonds" and 18K gold` : `✓ Non-diamond rule: keywords use 14K gold`;
+  const tagsHtml = kws.map(k=>{
+    const cls=/natural diamond/i.test(k)?' is-diamond':(/bony levy|fine jewelry/i.test(k)?' is-brand':'');
+    return `<span class="sample-kw-tag${cls}">${esc(k)}</span>`;
+  }).join('');
+  return `<div class="sample-item">
+    <div class="sample-prod-hdr"><span class="sample-prod-name">${esc(prod.name)}</span><span class="sample-prod-price">$${prod.price}</span></div>
+    <div class="sample-body">
+      <div class="sample-kw-label">Generated meta keywords (${kws.length})</div>
+      <div class="sample-kw-list">${tagsHtml}</div>
+      <div class="sample-kw-raw">${esc(kwString)}</div>
+      <div class="sample-rule-note">⟐ ${ruleNote}</div>
+    </div>
+  </div>`;
+}
+
+function renderStaticSamples() {
+  const staticData = [
+    { prod: SAMPLE_PRODUCTS[0], kw: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold earrings; Italian craftsmanship; luxury hoop earrings" },
+    { prod: SAMPLE_PRODUCTS[1], kw: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; diamond earrings; luxury diamond jewelry" },
+    { prod: SAMPLE_PRODUCTS[2], kw: "Bony Levy; diamond bar necklace; 18K yellow gold; natural diamonds; fine jewelry; bar pendant necklace; diamond pendant; round diamond necklace" },
+    { prod: SAMPLE_PRODUCTS[3], kw: "Bony Levy; bar pendant necklace; 14K yellow gold; fine jewelry; modern bar necklace; minimalist necklace; gold pendant; sleek gold jewelry" },
+    { prod: SAMPLE_PRODUCTS[4], kw: "Bony Levy; pave diamond ring; 18K yellow gold; natural diamonds; fine jewelry; stackable ring; diamond stackable band; luxury diamond ring" },
+  ];
+  return staticData.map(d=>renderSampleItem(d.prod,d.kw)).join('');
+}
+
+// ── CSV export ────────────────────────────────────────────────────────────────
+function escCSV(v){const s=String(v==null?'':v);return(s.includes(',')||s.includes('"')||s.includes('\n')||s.includes('\r'))?'"'+s.replace(/"/g,'""')+'"':s;}
+function downloadCSV() {
   const map={};
   allRows.forEach(r=>{map[r.lineIndex]=r.keywords;});
   const out=originalLines.map((line,i)=>{
@@ -480,9 +658,8 @@ function downloadCSV(){
   URL.revokeObjectURL(url);
   document.getElementById('downloadNote').textContent='✓ Downloaded — import back via Products → Import in BigCommerce';
 }
-
-function resetApp(){
-  allRows=[];headers=[];originalLines=[];
+function resetApp() {
+  allRows=[]; headers=[]; originalLines=[]; pendingTargets=[];
   document.getElementById('uploadSection').classList.remove('hidden');
   document.getElementById('editorSection').classList.add('hidden');
   document.getElementById('btnReset').style.display='none';
