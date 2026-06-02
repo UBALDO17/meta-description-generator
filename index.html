@@ -455,9 +455,36 @@ ${productList}
 Return (${products.length} items): ["kw1; kw2; ...", ...]`;
 }
 
+// ── Progress helpers ──────────────────────────────────────────────────────────
+function updateProgress(overallTotal) {
+  const filled = allRows.filter(r => r.keywords.trim()).length;
+  document.getElementById('progLabel').textContent = `${filled.toLocaleString()} / ${overallTotal.toLocaleString()} products have keywords`;
+  document.getElementById('progFill').style.width = (filled / overallTotal * 100) + '%';
+  return filled;
+}
+
+// Parse "retry in X.XXs" from Gemini quota error message
+function parseRetryDelay(msg) {
+  const m = msg.match(/retry in\s+([\d.]+)s/i);
+  if (m) return Math.ceil(parseFloat(m[1])) * 1000;
+  return 35000; // safe default: 35s
+}
+
+// Countdown timer shown in status while waiting for rate-limit retry
+async function waitWithCountdown(ms, label) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (stopGen) return; // let stop interrupt the wait
+    const left = Math.ceil((end - Date.now()) / 1000);
+    document.getElementById('statusText').textContent = `${label} — retrying in ${left}s…`;
+    await sleep(500);
+  }
+}
+
 // ── Generation core ────────────────────────────────────────────────────────────
 async function runGeneration(targets, kwN, apiKey) {
-  generating = true; stopGen = false;
+  generating = true;
+  let wasUserStopped = false; // separate flag so we don't lose it
   hideBanner();
   document.getElementById('btnGenerate').textContent = '⏹ Stop';
   document.getElementById('progSection').classList.remove('hidden');
@@ -466,69 +493,90 @@ async function runGeneration(targets, kwN, apiKey) {
 
   const total = targets.length;
   const overallTotal = allRows.length;
-  let done = 0;
+  let successCount = 0; // only counts truly processed batches
   const BATCH = 10;
 
   for (let i = 0; i < targets.length; i += BATCH) {
-    if (stopGen) break;
+    if (stopGen) { wasUserStopped = true; break; }
+
     const batch = targets.slice(i, i + BATCH);
-    document.getElementById('statusText').textContent = `Generating ${i+1}–${Math.min(i+BATCH,total)} of ${total}…`;
-    const filled = allRows.filter(r=>r.keywords.trim()).length;
-    document.getElementById('progLabel').textContent = `${filled.toLocaleString()} / ${overallTotal.toLocaleString()} products have keywords`;
-    document.getElementById('progFill').style.width = (filled / overallTotal * 100) + '%';
+    const batchEnd = Math.min(i + BATCH, total);
+
+    // Update status + progress BEFORE the API call so user sees live movement
+    document.getElementById('statusMsg').className = 'status-msg status-blue';
+    document.getElementById('spinner').style.display = '';
+    document.getElementById('statusText').textContent = `Generating ${i+1}–${batchEnd} of ${total}…`;
+    updateProgress(overallTotal);
+    updateStats();
 
     try {
       const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
       results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
-      // Remove processed from pendingTargets
       batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
-      done += batch.length;
+      successCount += batch.length;
+
+      // Update progress AFTER writing keywords so bar moves forward
+      updateProgress(overallTotal);
+      updateStats();
+      if (i % (BATCH*2) === 0) renderTable();
+
     } catch(e) {
-      console.error(e);
+      console.error('Batch error:', e);
+      if (stopGen) { wasUserStopped = true; break; }
+
+      // Parse the actual retry delay Gemini recommends
+      const retryMs = parseRetryDelay(e.message);
       document.getElementById('statusMsg').className = 'status-msg status-amber';
-      document.getElementById('statusText').textContent = `Error: ${e.message} — retrying in 10s…`;
-      await sleep(10000);
+      await waitWithCountdown(retryMs, `Rate limit hit`);
+
+      if (stopGen) { wasUserStopped = true; break; }
+
+      // One retry attempt
       try {
+        document.getElementById('statusMsg').className = 'status-msg status-blue';
+        document.getElementById('statusText').textContent = `Retrying ${i+1}–${batchEnd}…`;
         const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
         results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
         batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
-        done += batch.length;
-        document.getElementById('statusMsg').className = 'status-msg status-blue';
+        successCount += batch.length;
+        updateProgress(overallTotal);
+        updateStats();
+        if (i % (BATCH*2) === 0) renderTable();
       } catch(e2) {
-        console.error('Retry failed',e2);
-        done += batch.length;
+        console.error('Retry also failed — skipping batch:', e2);
+        // Don't count as success, but remove from pending so we don't re-add
+        // The batch stays in pending so "continue" will retry it
       }
     }
 
-    updateStats();
-    if (i % (BATCH*2) === 0) renderTable();
+    // Polite inter-batch delay (skip after last batch)
     if (i + BATCH < targets.length && !stopGen) await sleep(4500);
   }
 
-  // Final state
+  // ── Final state ───────────────────────────────────────────────────────────
   generating = false;
   document.getElementById('btnGenerate').innerHTML = '✦ Generate with AI';
-  const finalFilled = allRows.filter(r=>r.keywords.trim()).length;
-  document.getElementById('progFill').style.width = (finalFilled / overallTotal * 100) + '%';
-  document.getElementById('progLabel').textContent = `${finalFilled.toLocaleString()} / ${overallTotal.toLocaleString()} products have keywords`;
+  const finalFilled = updateProgress(overallTotal);
+  updateStats();
+  renderTable();
 
-  if (stopGen) {
+  if (wasUserStopped || stopGen) {
     stopGen = false;
-    // pendingTargets still holds the remaining ones
     const remaining = pendingTargets.length;
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('statusText').textContent = `Stopped — ${done.toLocaleString()} processed this session. ${remaining.toLocaleString()} remaining.`;
+    document.getElementById('statusText').textContent =
+      `Stopped — ${successCount.toLocaleString()} processed this session. ${remaining.toLocaleString()} still remaining.`;
     showBanner(remaining, finalFilled, overallTotal);
   } else {
     pendingTargets = [];
+    stopGen = false;
     document.getElementById('statusMsg').className = 'status-msg status-green';
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('statusText').textContent = `Done! All ${finalFilled.toLocaleString()} products now have keywords.`;
+    document.getElementById('statusText').textContent =
+      `Done! ${finalFilled.toLocaleString()} of ${overallTotal.toLocaleString()} products now have keywords.`;
     hideBanner();
   }
-
-  updateStats(); renderTable();
 }
 
 async function startGeneration() {
