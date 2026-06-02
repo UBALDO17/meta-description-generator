@@ -269,26 +269,27 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
               <div class="rule-item"><span class="rule-dot"></span><span><strong>Proper sentences</strong> with capitalization and punctuation — never a keyword string</span></div>
               <div class="rule-item"><span class="rule-dot"></span><span>Zone 1 (~160 chars): one complete sentence — product + metal + brand + hook</span></div>
               <div class="rule-item"><span class="rule-dot"></span><span>Zone 2 (161–350 chars): 1–2 sentences — long-tail variants, use cases, metal colors</span></div>
-              <div class="rule-item"><span class="rule-dot"></span><span>Minimum 280 chars — never repeat product name verbatim twice</span></div>
+              <div class="rule-item"><span class="rule-dot"></span><span>Target 300–340 chars — use " - " not em dashes</span></div>
               <div class="rule-item"><span class="rule-dot"></span><span>Always include <strong>Bony Levy</strong> + collection name</span></div>
               <div class="rule-item"><span class="rule-dot"></span><span>No filler phrases, no exclamation marks, no "free shipping"</span></div>
             </div>
           </div>
           <div class="brand-note">
-            <strong>Target:</strong> 280–350 characters total. Zone 1 = Google snippet (complete sentence). Zone 2 = indexed long-tail zone (variants, occasions, cross-links — also complete sentences).
+            <strong>Target:</strong> 300–340 characters total. Zone 1 = Google snippet (complete sentence). Zone 2 = indexed long-tail zone (variants, occasions, cross-links — also complete sentences). No em dashes — use " - " instead.
           </div>
           <div class="ai-row">
             <div class="field-grp">
               <label>Scope</label>
               <select id="applyScopeDesc">
-                <option value="all" selected>All products (overwrite existing)</option>
+                <option value="all">All products (overwrite existing)</option>
                 <option value="empty">Empty descriptions only</option>
+                <option value="short" selected>Short descriptions only (&lt;280 chars)</option>
               </select>
             </div>
             <div class="field-grp">
               <label>Target length</label>
               <select id="descLength">
-                <option value="ideal" selected>280–350 chars (recommended)</option>
+                <option value="ideal" selected>300–340 chars (recommended)</option>
                 <option value="short">160–220 chars (snippet only)</option>
               </select>
             </div>
@@ -299,13 +300,14 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 
         <!-- Both panel -->
         <div class="mode-panel" id="panelBoth">
-          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass. Descriptions use the senior SEO format (280–350 chars, proper sentences). Existing descriptions will be <strong>overwritten</strong>.</div>
+          <div class="brand-note">Generates <strong>both meta keywords and meta descriptions</strong> in one pass. Descriptions use the senior SEO format (300–340 chars, proper sentences, no em dashes). Existing descriptions will be <strong>overwritten</strong>.</div>
           <div class="ai-row">
             <div class="field-grp">
               <label>Keywords scope</label>
               <select id="applyScopeBoth">
-                <option value="all" selected>Overwrite all (keywords + descriptions)</option>
-                <option value="empty">Missing either field only</option>
+                <option value="all">Overwrite all (keywords + descriptions)</option>
+                <option value="empty" selected>Missing either field only</option>
+                <option value="short_desc">Short descriptions only (&lt;280 chars)</option>
               </select>
             </div>
             <div class="field-grp">
@@ -451,6 +453,22 @@ function colLetter(n) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ENCODING CLEANUP — fixes mojibake from previous CSV exports
+// ─────────────────────────────────────────────────────────────────────────────
+function fixEncoding(s) {
+  return s
+    .replace(/â€"/g, ' - ')   // em dash
+    .replace(/â€˜/g, "'")     // left single quote
+    .replace(/â€™/g, "'")     // right single quote / apostrophe
+    .replace(/â€œ/g, '"')     // left double quote
+    .replace(/â€/g, '"')      // right double quote
+    .replace(/â€¦/g, '...')   // ellipsis
+    .replace(/Â·/g, '·')      // middle dot
+    .replace(/Â/g, '')         // stray Â
+    .trim();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CSV PARSING
 // ─────────────────────────────────────────────────────────────────────────────
 function parseCSVLine(line) {
@@ -498,6 +516,9 @@ function processCSV(text) {
     if (!line.trim()) continue;
     const cols = parseCSVLine(line);
     if (cols[0] === 'Product') {
+      // Fix mojibake from previous CSV exports (UTF-8 read as Latin-1)
+      cols[COL_META_DESC] = fixEncoding(cols[COL_META_DESC] || '');
+      cols[COL_KW]        = fixEncoding(cols[COL_KW] || '');
       allRows.push({
         lineIndex: i,
         id: cols[COL_ID] || '',
@@ -528,13 +549,17 @@ function updateScopeLabels() {
   const total     = allRows.length;
   const emptyKw   = allRows.filter(r => !r.keywords.trim()).length;
   const emptyDesc = allRows.filter(r => !r.metaDesc.trim()).length;
+  const shortDesc = allRows.filter(r => r.metaDesc.trim().length > 0 && r.metaDesc.trim().length < 280).length;
   const emptyBoth = allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim()).length;
+  const shortBoth = allRows.filter(r => r.metaDesc.trim().length > 0 && r.metaDesc.trim().length < 280).length;
   document.getElementById('applyScopeKw').options[0].text   = 'Empty keywords only (' + emptyKw.toLocaleString() + ')';
   document.getElementById('applyScopeKw').options[1].text   = 'All ' + total.toLocaleString() + ' products (overwrite)';
   document.getElementById('applyScopeDesc').options[0].text = 'All ' + total.toLocaleString() + ' products (overwrite existing)';
   document.getElementById('applyScopeDesc').options[1].text = 'Empty descriptions only (' + emptyDesc.toLocaleString() + ')';
+  document.getElementById('applyScopeDesc').options[2].text = 'Short descriptions only <280 chars (' + shortDesc.toLocaleString() + ')';
   document.getElementById('applyScopeBoth').options[0].text = 'Overwrite all ' + total.toLocaleString() + ' (keywords + descriptions)';
   document.getElementById('applyScopeBoth').options[1].text = 'Missing either field (' + emptyBoth.toLocaleString() + ')';
+  document.getElementById('applyScopeBoth').options[2].text = 'Short descriptions <280 chars (' + shortBoth.toLocaleString() + ')';
 }
 
 function updateStats() {
@@ -596,7 +621,7 @@ function renderTable() {
     tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords</th><th>Meta Description</th><th style="text-align:center;">Status</th></tr>';
   } else if (viewMode === 'descriptions') {
     mainTable.classList.add('cols-desc');
-    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(280–350 chars target)</span></th><th style="text-align:center;">Status</th></tr>';
+    tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Description <span style="text-transform:none;letter-spacing:0;font-weight:400;">(300–340 chars target)</span></th><th style="text-align:center;">Status</th></tr>';
   } else {
     mainTable.classList.add('cols-kw');
     tHead.innerHTML = '<tr><th>#</th><th>Product</th><th>Meta Keywords <span style="text-transform:none;letter-spacing:0;font-weight:400;">(semicolon-separated)</span></th><th style="text-align:center;">Status</th></tr>';
@@ -619,8 +644,8 @@ function renderTable() {
     const kwCell = '<td><textarea class="kw-input" oninput="updateKw(' + idx + ',this.value)">' + esc(r.keywords) + '</textarea>' + tags + '<div class="kw-meta" id="kwmeta-' + idx + '">' + (kws.length ? kws.length + ' keywords' : '') + '</div></td>';
 
     const descLen  = r.metaDesc.trim().length;
-    const descCls  = descLen === 0 ? '' : (descLen >= 280 && descLen <= 350) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
-    const descHint = descLen === 0 ? '' : descLen + ' chars' + (descLen > 350 ? ' — over limit' : (descLen >= 280 ? ' ✓ ideal' : ' — short'));
+    const descCls  = descLen === 0 ? '' : (descLen >= 300 && descLen <= 340) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
+    const descHint = descLen === 0 ? '' : descLen + ' chars' + (descLen > 350 ? ' — over limit' : (descLen >= 300 ? ' ✓ ideal' : ' — short'));
     const descCell = '<td><textarea class="desc-input" oninput="updateDesc(' + idx + ',this.value,this)">' + esc(r.metaDesc) + '</textarea><div class="char-count ' + descCls + '" id="descmeta-' + idx + '">' + descHint + '</div></td>';
 
     const kwOk   = !!r.keywords.trim(), descOk = !!r.metaDesc.trim();
@@ -676,8 +701,8 @@ function updateDesc(idx, val) {
   const len  = val.trim().length;
   const meta = document.getElementById('descmeta-' + idx);
   if (meta) {
-    meta.className = 'char-count ' + (len === 0 ? '' : (len >= 280 && len <= 350) ? 'char-ok' : len > 350 ? 'char-over' : 'char-warn');
-    meta.textContent = len === 0 ? '' : len + ' chars' + (len > 350 ? ' — over limit' : len >= 280 ? ' ✓ ideal' : ' — short');
+    meta.className = 'char-count ' + (len === 0 ? '' : (len >= 300 && len <= 340) ? 'char-ok' : len > 350 ? 'char-over' : 'char-warn');
+    meta.textContent = len === 0 ? '' : len + ' chars' + (len > 350 ? ' — over limit' : len >= 300 ? ' ✓ ideal' : ' — short');
   }
 }
 
@@ -724,37 +749,39 @@ function showBanner(remaining, filled, total) {
 function hideBanner() { document.getElementById('resumeBanner').classList.add('hidden'); }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PROMPTS — FIXED: proper sentence structure, no keyword dumping
+// PROMPTS
 // ─────────────────────────────────────────────────────────────────────────────
 function buildKwPrompt(products, kwN) {
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
     const rule = diamond
-      ? '[RULE: diamond product → MUST use "' + karat + ' ' + tone + '" and include "natural diamonds"]'
-      : '[RULE: no diamonds → MUST use "' + karat + ' ' + tone + '"]';
+      ? '[RULE: diamond product -> MUST use "' + karat + ' ' + tone + '" and include "natural diamonds"]'
+      : '[RULE: no diamonds -> MUST use "' + karat + ' ' + tone + '"]';
     return (i+1) + '. "' + p.name + '"\n   ' + rule;
   }).join('\n\n');
-  return 'You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nMETAL RULES — strictly follow:\n1. Diamond products: 18K gold + always include "natural diamonds"\n2. Non-diamond: 14K gold (unless name says otherwise)\n3. Gold tone from name: yellow, white, or rose. Default yellow.\n\nGenerate exactly ' + kwN + ' SEO meta keywords per product:\n- Include exact metal karat + tone per rule\n- Include jewelry type, style/design from name, collection if present\n- Always include "Bony Levy" and "fine jewelry"\n- Semicolons only, lowercase except brand names and metal labels\n- Each keyword 1–4 words\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["kw1; kw2; ...", ...]';
+  return 'You are an SEO specialist for Bony Levy (bonylevy.com), a luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nMETAL RULES - strictly follow:\n1. Diamond products: 18K gold + always include "natural diamonds"\n2. Non-diamond: 14K gold (unless name says otherwise)\n3. Gold tone from name: yellow, white, or rose. Default yellow.\n\nGenerate exactly ' + kwN + ' SEO meta keywords per product:\n- Include exact metal karat + tone per rule\n- Include jewelry type, style/design from name, collection if present\n- Always include "Bony Levy" and "fine jewelry"\n- Semicolons only, lowercase except brand names and metal labels\n- Each keyword 1-4 words\n- Return ONLY a JSON array of strings, no markdown, no explanation\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' items: ["kw1; kw2; ...", ...]';
 }
 
 function buildDescPrompt(products, lengthTarget) {
-  const charMin = lengthTarget === 'short' ? '160' : '280';
-  const charMax = lengthTarget === 'short' ? '220' : '350';
+  const charMin = lengthTarget === 'short' ? '160' : '300';
+  const charMax = lengthTarget === 'short' ? '220' : '340';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
     return (i+1) + '. "' + p.name + '" | ' + karat + ' ' + tone + (diamond ? ' | natural diamonds' : '') + ' | $' + p.price;
   }).join('\n');
-  return 'You are a senior SEO copywriter writing meta descriptions for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nCRITICAL WRITING RULES — these are non-negotiable:\n1. Write in PROPER ENGLISH SENTENCES with correct capitalization and punctuation.\n2. NEVER write as a keyword string or run-on list. Every sentence must have a subject, verb, and end with a period.\n3. Zone 1 (first ~160 chars): ONE complete sentence. Lead with the product noun + metal karat + brand. End with a behavioral hook.\n4. Zone 2 (chars 161–' + charMax + '): ONE to TWO complete sentences. Add long-tail variants: metal color alternatives, use occasions, collection cross-links.\n5. Total length: ' + charMin + '–' + charMax + ' characters. If under ' + charMin + ', expand Zone 2 with more detail.\n6. Do NOT repeat the product name verbatim twice in one description.\n7. Use behavioral phrases naturally in a sentence: "made to layer", "build a stack", "everyday wear", "wear alone or stack".\n8. Include "Bony Levy" and collection name if identifiable.\n9. No exclamation marks. No "free shipping". No "handcrafted elegance". No "elevate your look".\n10. Natural luxury tone — sounds like a real human, not a keyword list.\n\nEXAMPLE of BAD output (never do this):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear with bony levy large hoop earrings in yellow gold or white gold for a classic look made to layer"\n\nEXAMPLE of GOOD output:\n"Large hoop earrings in 14K white gold by Bony Levy — lightweight, polished, and made to wear every day or layer with diamond studs. Shop the full Bony Levy earring collection in yellow, white, and rose gold; pairs perfectly with huggies and ear cuffs."\n\nProducts:\n' + list + '\n\nReturn ONLY a JSON array of strings, no markdown, no explanation. Exactly ' + products.length + ' items.';
+
+  return 'You are a senior SEO copywriter for Bony Levy (bonylevy.com), a luxury fine jewelry brand from Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nWRITE META DESCRIPTIONS. Every description MUST follow these rules exactly:\n\n1. PROPER SENTENCES ONLY. Use correct capitalization and end with a period. Never write a keyword string or run-on list.\n2. STRUCTURE - two zones:\n   Zone 1 (first ~160 chars): ONE complete sentence. Start with the product noun + metal karat + brand name + a behavioral hook.\n   Zone 2 (chars 161-' + charMax + '): ONE or TWO complete sentences. Add metal color variants (yellow/white/rose gold), use occasions, gifting context, collection cross-links.\n3. LENGTH: The total description MUST be between ' + charMin + ' and ' + charMax + ' characters. COUNT your characters before returning. If under ' + charMin + ' chars, you MUST expand Zone 2 with more detail - add gifting context, styling tips, or available metal colors until you reach ' + charMin + ' characters.\n4. NO EM DASHES. Use " - " (space hyphen space) instead of the em dash character.\n5. Do NOT repeat the product name verbatim twice in the same description.\n6. Include "Bony Levy" and the collection name if identifiable from the product name.\n7. Use behavioral phrases naturally in sentences: "made to layer", "build a stack", "everyday wear", "wear alone or stack".\n8. No exclamation marks. No "free shipping". No "handcrafted elegance". No "elevate your look". Natural luxury tone.\n\nBAD EXAMPLE (never write like this - keyword dump, no punctuation, too short):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear with bony levy large hoop earrings in yellow gold for a classic look made to layer"\n\nGOOD EXAMPLE (proper sentences, ' + charMin + '-' + charMax + ' chars, Zone 1 + Zone 2):\n"Large hoop earrings in 14K white gold by Bony Levy - bold, lightweight, and made to wear every day or layer with diamond studs. Available in yellow, white, and rose gold; a classic Bony Levy staple that pairs effortlessly with huggies, ear cuffs, and pavé styles from the full collection."\n\nProducts:\n' + list + '\n\nReturn ONLY a JSON array of strings. No markdown, no explanation. Exactly ' + products.length + ' items. Each item MUST be ' + charMin + '-' + charMax + ' characters.';
 }
 
 function buildBothPrompt(products, kwN, lengthTarget) {
-  const charMin = lengthTarget === 'short' ? '160' : '280';
-  const charMax = lengthTarget === 'short' ? '220' : '350';
+  const charMin = lengthTarget === 'short' ? '160' : '300';
+  const charMax = lengthTarget === 'short' ? '220' : '340';
   const list = products.map((p,i) => {
     const diamond = hasDiamond(p.name), karat = getMetalKarat(p.name), tone = getGoldTone(p.name);
-    return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond → ' + karat + ' ' + tone + ' + "natural diamonds"]' : '[no diamonds → ' + karat + ' ' + tone + ']');
+    return (i+1) + '. "' + p.name + '" | $' + p.price + ' | ' + (diamond ? '[diamond -> ' + karat + ' ' + tone + ' + "natural diamonds"]' : '[no diamonds -> ' + karat + ' ' + tone + ']');
   }).join('\n');
-  return 'You are a senior SEO copywriter for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate BOTH meta keywords AND meta description for each product.\n\nKEYWORD RULES (' + kwN + ' keywords, semicolon-separated):\n- Include exact metal karat + tone\n- Diamond products: 18K gold + "natural diamonds"\n- Non-diamond: 14K gold\n- Always include "Bony Levy" and "fine jewelry"\n- Include jewelry type, collection name if present\n- Lowercase except brand names and metal labels\n\nDESCRIPTION RULES — NON-NEGOTIABLE:\n1. Write in PROPER ENGLISH SENTENCES with correct capitalization and punctuation.\n2. NEVER write as a keyword string or run-on list.\n3. Zone 1 (first ~160 chars): ONE complete sentence — product noun + metal + brand + behavioral hook.\n4. Zone 2 (161–' + charMax + ' chars): ONE to TWO complete sentences — variants, occasions, collection links.\n5. Total: ' + charMin + '–' + charMax + ' characters. Expand Zone 2 if under ' + charMin + '.\n6. Do NOT repeat the product name verbatim twice.\n7. Use behavioral phrases naturally: "made to layer", "build a stack", "everyday wear".\n8. Include "Bony Levy" and collection name.\n9. No exclamation marks. No filler phrases. Natural luxury tone.\n\nBAD description example (never do this):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear with bony levy large hoop earrings in yellow gold for a classic look made to layer"\n\nGOOD description example:\n"Large hoop earrings in 14K white gold by Bony Levy — polished and lightweight, made to wear every day or layer with studs. Available in yellow, white, and rose gold; shop the full Bony Levy earrings collection."\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects.';
+
+  return 'You are a senior SEO copywriter for Bony Levy (bonylevy.com), luxury fine jewelry brand, Los Angeles. Collections: Audrey, Bardot, Mika, Maya, Varda, El Mar, Kiera, Gatsby.\n\nGenerate BOTH meta keywords AND meta description for each product.\n\nKEYWORD RULES (' + kwN + ' keywords, semicolon-separated):\n- Include exact metal karat + tone\n- Diamond products: 18K gold + "natural diamonds"\n- Non-diamond: 14K gold\n- Always include "Bony Levy" and "fine jewelry"\n- Include jewelry type, collection name if present\n- Lowercase except brand names and metal labels\n\nDESCRIPTION RULES - ALL ARE NON-NEGOTIABLE:\n1. PROPER SENTENCES ONLY. Correct capitalization and punctuation. Never a keyword string.\n2. Zone 1 (first ~160 chars): ONE complete sentence - product noun + metal + brand + behavioral hook.\n3. Zone 2 (161-' + charMax + ' chars): ONE or TWO complete sentences - metal color variants, occasions, gifting context, collection links.\n4. LENGTH: MUST be ' + charMin + '-' + charMax + ' characters total. COUNT characters. If under ' + charMin + ', ADD MORE to Zone 2 until you reach ' + charMin + ' characters. This is mandatory.\n5. NO EM DASHES. Use " - " (space hyphen space) only.\n6. Do NOT repeat the product name verbatim twice.\n7. Include "Bony Levy" and collection name.\n8. Use behavioral phrases naturally: "made to layer", "build a stack", "everyday wear".\n9. No exclamation marks. No filler phrases. Natural luxury tone.\n\nBAD description (never do this - too short, keyword dump):\n"14k white gold hoop earrings bony levy fine jewelry everyday wear made to layer"\n\nGOOD description (proper sentences, meets ' + charMin + '-' + charMax + ' char target):\n"Large hoop earrings in 14K white gold by Bony Levy - bold, lightweight, and made to wear every day or layer with diamond studs. Available in yellow, white, and rose gold; a classic Bony Levy staple that pairs effortlessly with huggies, ear cuffs, and pave styles from the full collection."\n\nReturn ONLY a JSON array of objects, no markdown:\n[{"keywords": "kw1; kw2; ...", "description": "..."}, ...]\n\nProducts:\n' + list + '\n\nReturn exactly ' + products.length + ' objects. Every description MUST be ' + charMin + '-' + charMax + ' characters.';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -782,7 +809,7 @@ async function waitWithCountdown(ms, label) {
   while (Date.now() < end) {
     if (stopGen) return;
     const left = Math.ceil((end - Date.now()) / 1000);
-    document.getElementById('statusText').textContent = label + ' — retrying in ' + left + 's…';
+    document.getElementById('statusText').textContent = label + ' - retrying in ' + left + 's...';
     await sleep(500);
   }
 }
@@ -792,7 +819,7 @@ async function waitWithCountdown(ms, label) {
 // ─────────────────────────────────────────────────────────────────────────────
 async function runGeneration(targets, mode, apiKey) {
   generating = true;
-  stopGen = false; // always reset at start of new run
+  stopGen = false;
   let wasUserStopped = false;
   hideBanner(); logReset();
 
@@ -814,7 +841,7 @@ async function runGeneration(targets, mode, apiKey) {
     const batch    = targets.slice(i, i + BATCH);
     const batchEnd = Math.min(i + BATCH, targets.length);
     document.getElementById('statusMsg').className = 'status-msg status-blue';
-    document.getElementById('statusText').textContent = 'Processing ' + (i+1) + '–' + batchEnd + ' of ' + targets.length + '…';
+    document.getElementById('statusText').textContent = 'Processing ' + (i+1) + '-' + batchEnd + ' of ' + targets.length + '...';
     updateProgress(mode); updateStats();
 
     let batchSuccess = false;
@@ -832,9 +859,9 @@ async function runGeneration(targets, mode, apiKey) {
             logEntry('ok', row.name, res.split(';').slice(0,3).map(s=>s.trim()).join(' · '));
           } else if (mode === 'descriptions' && typeof res === 'string' && res.trim()) {
             row.metaDesc = res; row.cols[COL_META_DESC] = res; row.aiGeneratedDesc = true;
-            logEntry('ok', row.name, res.slice(0,60) + '…');
+            logEntry('ok', row.name, res.slice(0,60) + '...');
           } else if (mode === 'both' && res && typeof res === 'object') {
-            if (res.keywords)    { row.keywords = res.keywords;    row.cols[COL_KW] = res.keywords;       row.aiGeneratedKw = true; }
+            if (res.keywords)    { row.keywords = res.keywords;    row.cols[COL_KW] = res.keywords;           row.aiGeneratedKw = true; }
             if (res.description) { row.metaDesc = res.description; row.cols[COL_META_DESC] = res.description; row.aiGeneratedDesc = true; }
             logEntry('ok', row.name, (res.keywords||'').split(';').slice(0,2).map(s=>s.trim()).join(' · '));
           }
@@ -850,14 +877,14 @@ async function runGeneration(targets, mode, apiKey) {
         const hardLimit = isQuotaExhausted(e.message);
         const waitMs    = parseRetryDelay(e.message, attempt);
         document.getElementById('statusMsg').className = 'status-msg status-amber';
-        if (hardLimit && attempt >= 2) { logEntry('err', 'Daily quota exhausted — try again tomorrow or use a different key.', ''); wasUserStopped = true; stopGen = true; break; }
-        logEntry('wait', 'Attempt ' + (attempt+1) + ' failed (' + e.message.slice(0,60) + ') — waiting ' + Math.ceil(waitMs/1000) + 's…', '');
+        if (hardLimit && attempt >= 2) { logEntry('err', 'Daily quota exhausted - try again tomorrow or use a different key.', ''); wasUserStopped = true; stopGen = true; break; }
+        logEntry('wait', 'Attempt ' + (attempt+1) + ' failed (' + e.message.slice(0,60) + ') - waiting ' + Math.ceil(waitMs/1000) + 's...', '');
         await waitWithCountdown(waitMs, 'Attempt ' + (attempt+1) + ' failed');
       }
     }
 
     if (wasUserStopped || stopGen) break;
-    if (!batchSuccess) logEntry('err', 'Batch ' + (i+1) + '–' + batchEnd + ' skipped after ' + MAX_RETRIES + ' attempts', '');
+    if (!batchSuccess) logEntry('err', 'Batch ' + (i+1) + '-' + batchEnd + ' skipped after ' + MAX_RETRIES + ' attempts', '');
     if (i + BATCH < targets.length && !stopGen) await sleep(800);
   }
 
@@ -874,7 +901,7 @@ async function runGeneration(targets, mode, apiKey) {
     lastMode = mode;
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('statusText').textContent = 'Stopped — ' + successCount.toLocaleString() + ' written this session. ' + pendingTargets.length.toLocaleString() + ' still need processing.';
+    document.getElementById('statusText').textContent = 'Stopped - ' + successCount.toLocaleString() + ' written this session. ' + pendingTargets.length.toLocaleString() + ' still need processing.';
     showBanner(pendingTargets.length, finalFilled, allRows.length);
   } else {
     pendingTargets = []; stopGen = false;
@@ -901,10 +928,14 @@ async function startGeneration(mode) {
     targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.keywords.trim());
   } else if (mode === 'descriptions') {
     const scope = document.getElementById('applyScopeDesc').value;
-    targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.metaDesc.trim());
+    if (scope === 'all')        targets = [...allRows];
+    else if (scope === 'empty') targets = allRows.filter(r => !r.metaDesc.trim());
+    else                        targets = allRows.filter(r => r.metaDesc.trim().length > 0 && r.metaDesc.trim().length < 280);
   } else {
     const scope = document.getElementById('applyScopeBoth').value;
-    targets = scope === 'all' ? [...allRows] : allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim());
+    if (scope === 'all')             targets = [...allRows];
+    else if (scope === 'short_desc') targets = allRows.filter(r => r.metaDesc.trim().length > 0 && r.metaDesc.trim().length < 280);
+    else                             targets = allRows.filter(r => !r.keywords.trim() || !r.metaDesc.trim());
   }
 
   if (!targets.length) { alert('No products need processing for this scope!'); return; }
@@ -917,12 +948,11 @@ async function continueGeneration() {
   if (generating) return;
   const apiKey = getApiKeyOrAlert(); if (!apiKey) return;
   if (!pendingTargets.length) { alert('Nothing left to process!'); return; }
-  // Use stored lastMode instead of inferring from field state
   await runGeneration([...pendingTargets], lastMode, apiKey);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GROQ API — fixed system prompt to enforce sentence writing
+// GROQ API
 // ─────────────────────────────────────────────────────────────────────────────
 async function callGroq(batch, mode, kwN, descLen, apiKey) {
   let prompt;
@@ -938,7 +968,7 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
       temperature: 0.25,
       max_tokens: 4000,
       messages: [
-        { role: 'system', content: 'You are a senior SEO copywriter. Meta descriptions must be written as proper English sentences with capitalization and punctuation — never as keyword strings or run-on lists. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
+        { role: 'system', content: 'You are a senior SEO copywriter. Meta descriptions must be written as proper English sentences with correct capitalization and punctuation - never as keyword strings or run-on lists. You must count characters carefully and ensure every description is between the specified minimum and maximum character count. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
         { role: 'user', content: prompt }
       ]
     })
@@ -968,7 +998,7 @@ async function callGroq(batch, mode, kwN, descLen, apiKey) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CSV EXPORT
+// CSV EXPORT — UTF-8 BOM to prevent encoding issues on download
 // ─────────────────────────────────────────────────────────────────────────────
 function escCSV(v) { return '"' + String(v==null?'':v).replace(/"/g,'""') + '"'; }
 
@@ -988,7 +1018,8 @@ function downloadCSV() {
     return cols.map(escCSV).join(',');
   });
 
-  const blob = new Blob([out.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  // UTF-8 BOM (\uFEFF) prevents character encoding issues (e.g. em dashes showing as â€")
+  const blob = new Blob(['\uFEFF' + out.join('\n')], { type: 'text/csv;charset=utf-8;' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url; a.download = 'products_meta_bonylevy.csv'; a.click();
@@ -1013,16 +1044,16 @@ function resetApp() {
 // SAMPLE MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 const SAMPLE_PRODUCTS = [
-  { name: "14K White Gold Bony Levy Large Hoop Earrings",                  price: "425.00",   type: "plain"   },
-  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings",  price: "1550.00",  type: "diamond" },
-  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace",         price: "635.00",   type: "plain"   },
-  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring", price: "995.00",   type: "diamond" },
+  { name: "14K White Gold Bony Levy Large Hoop Earrings",                  price: "425.00",  type: "plain"   },
+  { name: "18K White Gold Bony Levy Small Natural Diamond Hoop Earrings",  price: "1550.00", type: "diamond" },
+  { name: "14K Yellow Gold Bony Levy Modern Bar Pendant Necklace",         price: "635.00",  type: "plain"   },
+  { name: "18K Yellow Gold Pave Natural Diamond Bony Levy Stackable Ring", price: "995.00",  type: "diamond" },
 ];
 
 async function openSampleModal() {
   const apiKey = getApiKey();
   document.getElementById('sampleModal').classList.remove('hidden');
-  document.getElementById('sampleBody').innerHTML = '<div class="sample-loading"><div class="spinner"></div>Generating live samples…</div>';
+  document.getElementById('sampleBody').innerHTML = '<div class="sample-loading"><div class="spinner"></div>Generating live samples...</div>';
   if (!apiKey) {
     document.getElementById('sampleBody').innerHTML = '<div style="padding:1rem;font-size:13px;color:var(--text2);line-height:1.7;"><p style="margin-bottom:12px;">No API key saved yet. Here\'s a static preview:</p>' + renderStaticSamples() + '</div>';
     return;
@@ -1049,21 +1080,21 @@ function renderSampleItem(prod, res) {
     return '<span class="sample-kw-tag' + cls + '">' + esc(k) + '</span>';
   }).join('');
   const descLen = descString.length;
-  const descCls = (descLen >= 280 && descLen <= 350) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
-  const descHint = descLen + ' chars' + (descLen > 350 ? ' — over limit' : descLen >= 280 ? ' ✓ ideal' : ' — short');
+  const descCls = (descLen >= 300 && descLen <= 340) ? 'char-ok' : descLen > 350 ? 'char-over' : 'char-warn';
+  const descHint = descLen + ' chars' + (descLen > 350 ? ' - over limit' : descLen >= 300 ? ' ✓ ideal' : ' - short');
   return '<div class="sample-item">' +
     '<div class="sample-prod-hdr"><span class="sample-prod-name">' + esc(prod.name) + '</span><span class="sample-prod-price">$' + prod.price + '</span></div>' +
     '<div class="sample-body">' +
     (kwString ? '<div class="sample-kw-label">Keywords (' + kws.length + ')</div><div class="sample-kw-list">' + tagsHtml + '</div><div class="sample-kw-raw">' + esc(kwString) + '</div>' : '') +
     (descString ? '<div class="sample-kw-label" style="margin-top:10px;">Meta description</div><div class="sample-kw-raw">' + esc(descString) + '</div><div class="char-count ' + descCls + '" style="margin-top:4px;">' + descHint + '</div>' : '') +
-    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule: 18K gold + natural diamonds | Proper sentence format' : 'Non-diamond rule: 14K gold | Proper sentence format') + '</div>' +
+    '<div class="sample-rule-note">⟐ ' + (isDiamond ? 'Diamond rule: 18K gold + natural diamonds | 300-340 chars | proper sentences' : 'Non-diamond rule: 14K gold | 300-340 chars | proper sentences') + '</div>' +
     '</div></div>';
 }
 
 function renderStaticSamples() {
   return [
-    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold gold earrings; luxury earrings; gold hoop earrings", description: "Large hoop earrings in 14K white gold by Bony Levy — bold, lightweight, and made to wear every day or layer with diamond studs. Shop the full Bony Levy earring collection in yellow, white, and rose gold; pairs beautifully with huggies, ear cuffs, and pavé styles." } },
-    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold diamond earrings", description: "Small pavé diamond hoop earrings in 18K white gold with natural diamonds by Bony Levy — worn close to the ear, polished enough for everyday wear. Also available in 18K yellow and rose gold; a timeless fine jewelry gift for anniversaries, engagements, or daily luxury." } },
+    { prod: SAMPLE_PRODUCTS[0], res: { keywords: "Bony Levy; large hoop earrings; 14K white gold; fine jewelry; white gold hoops; bold gold earrings; luxury earrings; gold hoop earrings", description: "Large hoop earrings in 14K white gold by Bony Levy - bold, lightweight, and made to wear every day or layer with diamond studs. Available in yellow, white, and rose gold; a classic Bony Levy staple that pairs effortlessly with huggies, ear cuffs, and pave styles from the full earrings collection." } },
+    { prod: SAMPLE_PRODUCTS[1], res: { keywords: "Bony Levy; diamond hoop earrings; 18K white gold; natural diamonds; fine jewelry; small diamond hoops; luxury diamond earrings; white gold diamond earrings", description: "Small pave diamond hoop earrings in 18K white gold with natural diamonds by Bony Levy - worn close to the ear and polished enough for everyday wear or special occasions. Also available in 18K yellow and rose gold; a timeless Bony Levy fine jewelry gift for anniversaries, engagements, or as a daily luxury staple." } },
   ].map(d => renderSampleItem(d.prod, d.res)).join('');
 }
 </script>
