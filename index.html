@@ -121,6 +121,32 @@ tbody td { padding: 9px 14px; vertical-align: top; }
 }
 .resume-banner-text { font-size: 13px; color: var(--amber); line-height: 1.5; }
 .resume-banner-text strong { font-weight: 600; }
+/* Live log */
+.live-log {
+  margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); max-height: 160px; overflow-y: auto;
+}
+.live-log-hdr {
+  padding: 7px 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text3); border-bottom: 1px solid var(--border); background: var(--bg3);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.live-log-hdr span { display: flex; align-items: center; gap: 6px; }
+.log-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.log-dot.paused { background: var(--amber); animation: none; }
+.live-log-body { padding: 6px 0; }
+.log-entry {
+  padding: 4px 12px; font-size: 12px; line-height: 1.5; display: flex; align-items: baseline; gap: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.log-entry:last-child { border-bottom: none; }
+.log-entry.is-ok .log-name { color: var(--text); }
+.log-entry.is-ok .log-icon { color: var(--green); font-size: 11px; }
+.log-entry.is-wait { color: var(--amber); font-style: italic; }
+.log-entry.is-err { color: var(--red); }
+.log-kw { font-size: 11px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px; }
+.log-time { font-size: 10px; color: var(--text3); margin-left: auto; white-space: nowrap; }
 /* Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 2rem; backdrop-filter: blur(3px); }
 .modal { background: var(--bg); border-radius: var(--radius-lg); width: 100%; max-width: 760px; max-height: 80vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.2); }
@@ -233,6 +259,16 @@ tbody td { padding: 9px 14px; vertical-align: top; }
           </div>
           <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
           <div class="prog-label" id="progLabel">0 / 0</div>
+          <!-- Live activity log -->
+          <div class="live-log" id="liveLog">
+            <div class="live-log-hdr">
+              <span><span class="log-dot paused" id="logDot"></span>Live activity</span>
+              <span id="logCount" style="font-size:10px;color:var(--text3);"></span>
+            </div>
+            <div class="live-log-body" id="liveLogBody">
+              <div class="log-entry is-wait" style="padding:8px 12px;">Waiting to start…</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -412,12 +448,42 @@ function renderTable() {
 function updateKw(idx,val){allRows[idx].keywords=val;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+// ── Live log ──────────────────────────────────────────────────────────────────
+let logSessionCount = 0;
+function logReset() {
+  logSessionCount = 0;
+  document.getElementById('liveLogBody').innerHTML = '';
+  document.getElementById('logCount').textContent = '';
+  document.getElementById('logDot').classList.remove('paused');
+}
+function logPause() { document.getElementById('logDot').classList.add('paused'); }
+function logEntry(type, name, kwSnippet) {
+  const body = document.getElementById('liveLogBody');
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div = document.createElement('div');
+  if (type === 'ok') {
+    logSessionCount++;
+    div.className = 'log-entry is-ok';
+    div.innerHTML = `<span class="log-icon">✓</span><span class="log-name">${esc(name)}</span><span class="log-kw">${esc(kwSnippet)}</span><span class="log-time">${now}</span>`;
+    document.getElementById('logCount').textContent = `${logSessionCount} written this session`;
+  } else if (type === 'wait') {
+    div.className = 'log-entry is-wait';
+    div.innerHTML = `<span>⏳ ${esc(name)}</span><span class="log-time">${now}</span>`;
+  } else if (type === 'err') {
+    div.className = 'log-entry is-err';
+    div.innerHTML = `<span>✗ ${esc(name)}</span><span class="log-time">${now}</span>`;
+  }
+  body.appendChild(div);
+  // Auto-scroll to bottom
+  const log = document.getElementById('liveLog');
+  log.scrollTop = log.scrollHeight;
+}
+
 // ── Resume banner ─────────────────────────────────────────────────────────────
-function showBanner(remaining, done, total) {
-  const banner = document.getElementById('resumeBanner');
+function showBanner(remaining, filled, total) {
   document.getElementById('resumeText').textContent =
-    `${done.toLocaleString()} of ${total.toLocaleString()} products were processed. ${remaining.toLocaleString()} still need keywords.`;
-  banner.classList.remove('hidden');
+    `${filled.toLocaleString()} of ${total.toLocaleString()} products have keywords. ${remaining.toLocaleString()} still need them.`;
+  document.getElementById('resumeBanner').classList.remove('hidden');
 }
 function hideBanner() {
   document.getElementById('resumeBanner').classList.add('hidden');
@@ -484,8 +550,9 @@ async function waitWithCountdown(ms, label) {
 // ── Generation core ────────────────────────────────────────────────────────────
 async function runGeneration(targets, kwN, apiKey) {
   generating = true;
-  let wasUserStopped = false; // separate flag so we don't lose it
+  let wasUserStopped = false;
   hideBanner();
+  logReset();
   document.getElementById('btnGenerate').textContent = '⏹ Stop';
   document.getElementById('progSection').classList.remove('hidden');
   document.getElementById('statusMsg').className = 'status-msg status-blue';
@@ -493,7 +560,7 @@ async function runGeneration(targets, kwN, apiKey) {
 
   const total = targets.length;
   const overallTotal = allRows.length;
-  let successCount = 0; // only counts truly processed batches
+  let successCount = 0;
   const BATCH = 10;
 
   for (let i = 0; i < targets.length; i += BATCH) {
@@ -502,7 +569,6 @@ async function runGeneration(targets, kwN, apiKey) {
     const batch = targets.slice(i, i + BATCH);
     const batchEnd = Math.min(i + BATCH, total);
 
-    // Update status + progress BEFORE the API call so user sees live movement
     document.getElementById('statusMsg').className = 'status-msg status-blue';
     document.getElementById('spinner').style.display = '';
     document.getElementById('statusText').textContent = `Generating ${i+1}–${batchEnd} of ${total}…`;
@@ -511,11 +577,18 @@ async function runGeneration(targets, kwN, apiKey) {
 
     try {
       const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
-      results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+      results.forEach((kw, j) => {
+        if (kw) {
+          batch[j].keywords = kw;
+          batch[j].aiGenerated = true;
+          // Log each product individually as it's written
+          const snippet = kw.split(';').slice(0,3).map(s=>s.trim()).join(' · ');
+          logEntry('ok', batch[j].name, snippet);
+        }
+      });
       batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
       successCount += batch.length;
 
-      // Update progress AFTER writing keywords so bar moves forward
       updateProgress(overallTotal);
       updateStats();
       if (i % (BATCH*2) === 0) renderTable();
@@ -524,37 +597,42 @@ async function runGeneration(targets, kwN, apiKey) {
       console.error('Batch error:', e);
       if (stopGen) { wasUserStopped = true; break; }
 
-      // Parse the actual retry delay Gemini recommends
       const retryMs = parseRetryDelay(e.message);
       document.getElementById('statusMsg').className = 'status-msg status-amber';
+      logEntry('wait', `Rate limit — waiting ${Math.ceil(retryMs/1000)}s before retry…`);
       await waitWithCountdown(retryMs, `Rate limit hit`);
 
       if (stopGen) { wasUserStopped = true; break; }
 
-      // One retry attempt
       try {
         document.getElementById('statusMsg').className = 'status-msg status-blue';
         document.getElementById('statusText').textContent = `Retrying ${i+1}–${batchEnd}…`;
         const results = await callGemini(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN, apiKey);
-        results.forEach((kw,j)=>{ if(kw){batch[j].keywords=kw;batch[j].aiGenerated=true;} });
+        results.forEach((kw, j) => {
+          if (kw) {
+            batch[j].keywords = kw;
+            batch[j].aiGenerated = true;
+            const snippet = kw.split(';').slice(0,3).map(s=>s.trim()).join(' · ');
+            logEntry('ok', batch[j].name, snippet);
+          }
+        });
         batch.forEach(r => { const pi = pendingTargets.indexOf(r); if(pi>-1) pendingTargets.splice(pi,1); });
         successCount += batch.length;
         updateProgress(overallTotal);
         updateStats();
         if (i % (BATCH*2) === 0) renderTable();
       } catch(e2) {
-        console.error('Retry also failed — skipping batch:', e2);
-        // Don't count as success, but remove from pending so we don't re-add
-        // The batch stays in pending so "continue" will retry it
+        console.error('Retry also failed:', e2);
+        logEntry('err', `Batch ${i+1}–${batchEnd} failed — will retry on Continue`);
       }
     }
 
-    // Polite inter-batch delay (skip after last batch)
     if (i + BATCH < targets.length && !stopGen) await sleep(4500);
   }
 
   // ── Final state ───────────────────────────────────────────────────────────
   generating = false;
+  logPause();
   document.getElementById('btnGenerate').innerHTML = '✦ Generate with AI';
   const finalFilled = updateProgress(overallTotal);
   updateStats();
@@ -562,11 +640,13 @@ async function runGeneration(targets, kwN, apiKey) {
 
   if (wasUserStopped || stopGen) {
     stopGen = false;
+    // Always recompute remaining from actual data so reload doesn't show "0"
+    pendingTargets = allRows.filter(r => !r.keywords.trim());
     const remaining = pendingTargets.length;
     document.getElementById('statusMsg').className = 'status-msg status-amber';
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('statusText').textContent =
-      `Stopped — ${successCount.toLocaleString()} processed this session. ${remaining.toLocaleString()} still remaining.`;
+      `Stopped — ${successCount.toLocaleString()} written this session. ${remaining.toLocaleString()} still need keywords.`;
     showBanner(remaining, finalFilled, overallTotal);
   } else {
     pendingTargets = [];
@@ -595,11 +675,9 @@ async function continueGeneration() {
   if (generating) return;
   const apiKey = getApiKey();
   if (!apiKey) { alert('Please enter and save your Gemini API key first.'); return; }
-  if (!pendingTargets.length) {
-    // Fall back to all empty if no pending tracked
-    pendingTargets = allRows.filter(r=>!r.keywords.trim());
-  }
-  if (!pendingTargets.length) { alert('No products remaining — all have keywords!'); return; }
+  // Always recompute from actual data — works even after page reload
+  pendingTargets = allRows.filter(r => !r.keywords.trim());
+  if (!pendingTargets.length) { alert('All products already have keywords!'); return; }
   const kwN = document.getElementById('kwCount').value;
   await runGeneration([...pendingTargets], kwN, apiKey);
 }
