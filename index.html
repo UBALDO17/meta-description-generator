@@ -189,7 +189,7 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
     <span class="header-sub">BigCommerce SEO Tool</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center;">
-    <span class="gold-pill">✦ Gemini AI</span>
+    <span class="gold-pill">✦ Groq — Free AI</span>
     <button class="btn" onclick="openSampleModal()" style="background:var(--bg2);color:var(--text);border-color:var(--border2);">📋 Preview samples</button>
     <button class="btn" id="btnReset" onclick="resetApp()" style="display:none;">↩ New CSV</button>
     <button class="btn btn-green" id="btnDownload" onclick="downloadCSV()" style="display:none;">⬇ Download CSV</button>
@@ -199,10 +199,10 @@ tbody td { padding: 9px 14px; vertical-align: top; overflow: hidden; }
 <div class="container">
 
   <div class="setup-card" id="setupCard">
-    <h2>🔑 Google AI Studio API Key</h2>
-    <p>Get a <strong>free</strong> key at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold);">aistudio.google.com</a> — no billing required. Stored only in your browser session.</p>
+    <h2>🔑 Groq API Key — 100% Free</h2>
+    <p>Get a <strong>free</strong> key at <a href="https://console.groq.com/keys" target="_blank" style="color:var(--gold);">console.groq.com/keys</a> — no billing or credit card required. Stored only in your browser session.</p>
     <div class="api-row">
-      <input type="password" id="apiKeyInput" placeholder="Your Google AI Studio key…" autocomplete="off" oninput="onApiKeyInput()" />
+      <input type="password" id="apiKeyInput" placeholder="gsk_…" autocomplete="off" oninput="onApiKeyInput()" />
       <button class="btn btn-gold" onclick="saveApiKey()">Save key</button>
     </div>
     <div class="api-saved" id="apiSaved">✓ Key saved for this session</div>
@@ -413,12 +413,12 @@ let currentPage = 0;
 let searchDebounce = null;
 
 // ── API Key ──────────────────────────────────────────────────────────────────
-function getApiKey() { return sessionStorage.getItem('gemini_api_key') || ''; }
+function getApiKey() { return sessionStorage.getItem('groq_api_key') || ''; }
 function onApiKeyInput() { document.getElementById('apiSaved').style.display = 'none'; }
 function saveApiKey() {
   const k = document.getElementById('apiKeyInput').value.trim();
-  if (!k) { alert('Please paste your Google AI Studio API key first.'); return; }
-  sessionStorage.setItem('gemini_api_key', k);
+  if (!k) { alert('Please paste your Groq API key first.'); return; }
+  sessionStorage.setItem('groq_api_key', k);
   document.getElementById('apiSaved').style.display = 'block';
 }
 window.addEventListener('DOMContentLoaded', () => {
@@ -930,7 +930,7 @@ async function runGeneration(targets, mode, apiKey) {
 
     if (wasUserStopped || stopGen) break;
     if (!batchSuccess) logEntry('err', `Batch ${i+1}–${batchEnd} skipped after ${MAX_RETRIES} attempts`);
-    if (i + BATCH < targets.length && !stopGen) await sleep(2500);
+    if (i + BATCH < targets.length && !stopGen) await sleep(800);
   }
 
   generating = false;
@@ -966,7 +966,7 @@ async function runGeneration(targets, mode, apiKey) {
 
 function getApiKeyOrAlert() {
   const key = getApiKey();
-  if (!key) { alert('Please enter and save your Google AI Studio API key first.\n\nGet a free key at: aistudio.google.com/app/apikey'); document.getElementById('apiKeyInput').focus(); return null; }
+  if (!key) { alert('Please enter and save your Groq API key first.\n\nGet a free key at: console.groq.com/keys'); document.getElementById('apiKeyInput').focus(); return null; }
   return key;
 }
 
@@ -1002,45 +1002,51 @@ async function continueGeneration() {
   await runGeneration([...pendingTargets], mode, apiKey);
 }
 
-// ── Gemini API call ───────────────────────────────────────────────────────────
 async function callGemini(batch, mode, kwN, descLen, apiKey) {
   let prompt;
   if (mode === 'keywords') prompt = buildKwPrompt(batch.map(r=>({name:r.name,meta:r.metaDesc})), kwN);
   else if (mode === 'descriptions') prompt = buildDescPrompt(batch.map(r=>({name:r.name,price:r.price})), descLen);
   else prompt = buildBothPrompt(batch.map(r=>({name:r.name,price:r.price})), kwN, descLen);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const resp = await fetch(url, {
+  const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.2,maxOutputTokens:3000} })
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.2,
+      max_tokens: 3000,
+      messages: [
+        { role: 'system', content: 'You are a precise SEO specialist. Always respond with valid JSON arrays only. No markdown, no explanation, no preamble.' },
+        { role: 'user', content: prompt }
+      ]
+    })
   });
 
   if (!resp.ok) {
     const err = await resp.json().catch(()=>({}));
     const msg = err?.error?.message || `HTTP ${resp.status}`;
-    const details = (err?.error?.details||[]).map(d=>d.reason||'').filter(Boolean).join('; ');
-    throw new Error(details ? `${msg} — ${details}` : msg);
+    throw new Error(msg);
   }
 
   const data = await resp.json();
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  if (!raw) throw new Error('Empty response from API');
+  const raw = data.choices?.[0]?.message?.content || '';
+  if (!raw) throw new Error('Empty response from Groq API');
 
-  // Strip markdown fences
   const clean = raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
 
   let parsed;
   try {
     parsed = JSON.parse(clean);
   } catch(e) {
-    // Fallback: try to extract a JSON array from anywhere in the response
-    const match = clean.match(/\[[\s\S]*\]/);
+    const match = clean.match(/\[\s\S]*\]/);
     if (match) {
       try { parsed = JSON.parse(match[0]); }
-      catch(e2) { throw new Error(`JSON parse failed. Raw: ${raw.slice(0,200)}`); }
+      catch(e2) { throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200)); }
     } else {
-      throw new Error(`JSON parse failed. Raw: ${raw.slice(0,200)}`);
+      throw new Error('JSON parse failed. Raw: ' + raw.slice(0,200));
     }
   }
 
@@ -1109,7 +1115,7 @@ async function openSampleModal() {
   try {
     const results = await callGemini(SAMPLE_PRODUCTS, 'both', '8', 'ideal', apiKey);
     const html = SAMPLE_PRODUCTS.map((p,i) => renderSampleItem(p, results[i]||{})).join('');
-    document.getElementById('sampleBody').innerHTML = html + `<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Gemini key.</p>`;
+    document.getElementById('sampleBody').innerHTML = html + `<p style="font-size:11px;color:var(--text3);margin-top:16px;text-align:center;">Live AI results from your Groq key.</p>`;
   } catch(e) {
     document.getElementById('sampleBody').innerHTML = `<div style="padding:1rem;color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
   }
